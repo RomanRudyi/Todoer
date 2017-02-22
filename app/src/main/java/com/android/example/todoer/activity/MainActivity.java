@@ -51,7 +51,9 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+
         // TODO: replace dummy data
+
         TaskListAdapter taskListAdapter = new TaskListAdapter(TaskDummy.tasks);
         recyclerView.setAdapter(taskListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
