@@ -20,7 +20,7 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         int taskNo = (Integer) getIntent().getExtras().getInt(EXTRA_TASK_NO);
 
-        TextView taskDetailTextView = (TextView) findViewById(R.id.taskDetailTextView);
+        TextView taskDetailTextView = (TextView) findViewById(R.id.task_detail_text_view);
         taskDetailTextView.setText(TaskDummy.tasks[taskNo]);
     }
 }

@@ -1,13 +1,11 @@
 package com.android.example.todoer.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,15 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.android.example.todoer.R;
-import com.android.example.todoer.adapter.TaskListAdapter;
-import com.android.example.todoer.model.TaskDummy;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private RecyclerView recyclerView;
+    private static final String VISIBLE_FRAGMENT = "visible_fragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,21 +47,20 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        // TODO: replace dummy data
-        TaskListAdapter taskListAdapter = new TaskListAdapter(TaskDummy.tasks);
-        recyclerView.setAdapter(taskListAdapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        // Projects list example
+        navigationView.setCheckedItem(R.id.nav_inbox);
+        Menu menu = navigationView.getMenu();
+        for (int i = 0; i < 3; i++) {
+            menu.add(R.id.group_projects, i, 0, "Item " + i)
+                    .setIcon(R.drawable.ic_project)
+                    .setCheckable(true);
+        }
 
-        taskListAdapter.setListener(new TaskListAdapter.Listener() {
-            @Override
-            public void onClick(int position) {
-                Intent intent = new Intent(MainActivity.this, TaskDetailActivity.class);
-                intent.putExtra(TaskDetailActivity.EXTRA_TASK_NO, position);
-                startActivity(intent);
-            }
-        });
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_frame, new InboxFragment(), VISIBLE_FRAGMENT);
+        transaction.addToBackStack(null);
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.commit();
     }
 
     @Override
@@ -105,19 +101,27 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        Fragment fragment;
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_inbox) {
+            fragment = new InboxFragment();
+        } else if (id == R.id.nav_calendar) {
+            fragment = new InboxFragment();
+        } else if (id ==  R.id.nav_add_list) {
+            fragment = new InboxFragment();
+        } else {
+            fragment = new ProjectFragment();
+            /** Pass the project id to {@link ProjectFragment} */
+            Bundle bundle = new Bundle();
+            bundle.putLong(ProjectFragment.PROJECT_ID, id);
+            fragment.setArguments(bundle);
         }
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_frame, fragment, VISIBLE_FRAGMENT);
+        transaction.addToBackStack(null);
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

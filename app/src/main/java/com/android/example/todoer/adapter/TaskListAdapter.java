@@ -28,7 +28,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         CardView cardView = holder.cardView;
-        TextView taskTextView = (TextView) cardView.findViewById(R.id.taskTitleTextView);
+        TextView taskTextView = (TextView) cardView.findViewById(R.id.task_title_text_view);
         taskTextView.setText(tasks[position]);
 
         cardView.setOnClickListener(new View.OnClickListener() {
@@ -55,8 +55,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
         }
     }
 
-    public static interface Listener {
-        public void onClick(int position);
+    public interface Listener {
+        void onClick(int position);
     }
 
     public void setListener(Listener listener) {
