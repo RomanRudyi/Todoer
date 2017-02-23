@@ -55,8 +55,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
         }
     }
 
-    public static interface Listener {
-        public void onClick(int position);
+    public interface Listener {
+        void onClick(int position);
     }
 
     public void setListener(Listener listener) {
