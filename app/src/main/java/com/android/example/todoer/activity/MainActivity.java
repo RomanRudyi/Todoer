@@ -50,7 +50,16 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        // Projects list example
+        navigationView.setCheckedItem(R.id.nav_inbox);
+        Menu menu = navigationView.getMenu();
+        for (int i = 0; i < 3; i++) {
+            menu.add(R.id.group_projects, i, 0, "Item " + i)
+                    .setIcon(R.drawable.ic_project)
+                    .setCheckable(true);
+        }
+
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         // TODO: replace dummy data
 
@@ -107,19 +116,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
