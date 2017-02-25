@@ -15,4 +15,9 @@
     <!-- Empty view labels -->
     <string name="empty_view_title_text">You`re all done for today!</string>
     <string name="empty_view_subtitle_text">Enjoy your day.</string>
+
+    <!-- TaskDetailActivity labels -->
+    <string name="detail_title">Title</string>
+    <string name="detail_project">Project</string>
+    <string name="detail_priority">Priority</string>
 </resources>
