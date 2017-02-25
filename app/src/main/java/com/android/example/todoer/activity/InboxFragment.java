@@ -9,31 +9,39 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.android.example.todoer.R;
 import com.android.example.todoer.adapter.TaskListAdapter;
 import com.android.example.todoer.model.TaskDummy;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class InboxFragment extends Fragment {
 
-    private RecyclerView recyclerView;
+    private RelativeLayout taskListLayout;
+    private RecyclerView taskRecyclerView;
+    private RelativeLayout emptyView;
+    private String[] data;
+    private TaskListAdapter taskListAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        recyclerView = (RecyclerView)
+        taskListLayout = (RelativeLayout)
                 inflater.inflate(R.layout.fragment_task_list, container, false);
+        taskRecyclerView = (RecyclerView) taskListLayout.findViewById(R.id.task_recycler_view);
+        emptyView = (RelativeLayout) taskListLayout.findViewById(R.id.empty_view);
 
         // TODO: replace dummy data
+        data = TaskDummy.tasks;
 
-        TaskListAdapter taskListAdapter = new TaskListAdapter(TaskDummy.tasks);
-        recyclerView.setAdapter(taskListAdapter);
+        refreshTaskRecyclerView();
+
+        taskListAdapter = new TaskListAdapter(data);
+        taskRecyclerView.setAdapter(taskListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
+        taskRecyclerView.setLayoutManager(layoutManager);
 
         taskListAdapter.setListener(new TaskListAdapter.Listener() {
             @Override
@@ -44,7 +52,17 @@ public class InboxFragment extends Fragment {
             }
         });
 
-        return recyclerView;
+        return taskListLayout;
     }
 
+    private void refreshTaskRecyclerView() {
+        if (data == null) {
+            emptyView.setVisibility(View.VISIBLE);
+            taskRecyclerView.setVisibility(View.GONE);
+            taskListLayout.setBackgroundColor(getResources().getColor(R.color.colorEmptyView));
+        } else {
+            emptyView.setVisibility(View.GONE);
+            taskRecyclerView.setVisibility(View.VISIBLE);
+        }
+    }
 }
