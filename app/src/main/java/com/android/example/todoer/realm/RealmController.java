@@ -10,7 +10,7 @@ public class RealmController {
 
     /**
      * This helper method returns the new id for {@link TaskRealm} object
-     * @param realm
+     * @param realm - Realm instance
      * @return nextTaskId
      */
     public static long getNextTaskId(Realm realm) {
@@ -27,10 +27,10 @@ public class RealmController {
     /**
      * This helper method returns the new id for {@link ProjectRealm} object
      * The id = 0 is required for {@link TaskRealm} objects, which isn't related to any project (inbox only)
-     * @param realm
+     * @param realm - Realm instance
      * @return nextProjectId
      */
-    private long getNextProjectId(Realm realm) {
+    public static long getNextProjectId(Realm realm) {
         RealmResults<ProjectRealm> projects = realm.where(ProjectRealm.class).findAllSorted(ProjectRealm.ID);
         long nextProjectId;
         if (projects.size() == 0) {
