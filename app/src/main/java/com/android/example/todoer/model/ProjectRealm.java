@@ -5,6 +5,10 @@ import io.realm.annotations.PrimaryKey;
 
 public class ProjectRealm extends RealmObject {
 
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String COLOR = "color";
+
     @PrimaryKey
     private long id;
 

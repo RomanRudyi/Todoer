@@ -7,6 +7,14 @@ import io.realm.annotations.PrimaryKey;
 
 public class TaskRealm extends RealmObject {
 
+    public static final String ID = "id";
+    public static final String PROJECT_ID = "projectId";
+    public static final String TITLE = "TITLE";
+    public static final String DESCRIPTION = "description";
+    public static final String PRIORITY = "priority";
+    public static final String REPEATABLE = "repeatable";
+    public static final String DATE= "date";
+
     @PrimaryKey
     private long id;
 
