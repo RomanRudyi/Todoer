@@ -16,9 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.android.example.todoer.R;
-import com.android.example.todoer.model.TaskDummy;
-import com.android.example.todoer.model.TaskRealm;
-import com.android.example.todoer.realm.RealmController;
 
 import io.realm.Realm;
 
@@ -69,7 +66,7 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
 
         // TODO: delete this placeholder after testing
-        realm = Realm.getDefaultInstance();
+        /*realm = Realm.getDefaultInstance();
         if (RealmController.getNextTaskId(realm) == 0) {
             realm.beginTransaction();
             for (String task : TaskDummy.tasks) {
@@ -77,7 +74,7 @@ public class MainActivity extends AppCompatActivity
                 realm.copyToRealm(taskRealm);
             }
             realm.commitTransaction();
-        }
+        }*/
     }
 
     @Override
