@@ -13,7 +13,10 @@ import android.widget.RelativeLayout;
 
 import com.android.example.todoer.R;
 import com.android.example.todoer.adapter.TaskListAdapter;
-import com.android.example.todoer.model.TaskDummy;
+import com.android.example.todoer.model.TaskRealm;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 
 public class InboxFragment extends Fragment {
@@ -21,12 +24,15 @@ public class InboxFragment extends Fragment {
     private RelativeLayout taskListLayout;
     private RecyclerView taskRecyclerView;
     private RelativeLayout emptyView;
-    private String[] data;
     private TaskListAdapter taskListAdapter;
+
+    private Realm realm;
+    private RealmResults<TaskRealm> tasks;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        realm = Realm.getDefaultInstance();
         // Inflate the layout for this fragment
         taskListLayout = (RelativeLayout)
                 inflater.inflate(R.layout.fragment_task_list, container, false);
@@ -34,11 +40,11 @@ public class InboxFragment extends Fragment {
         emptyView = (RelativeLayout) taskListLayout.findViewById(R.id.empty_view);
 
         // TODO: replace dummy data
-        data = TaskDummy.tasks;
+        tasks = realm.where(TaskRealm.class).findAll();
 
         refreshTaskRecyclerView();
 
-        taskListAdapter = new TaskListAdapter(data);
+        taskListAdapter = new TaskListAdapter(tasks);
         taskRecyclerView.setAdapter(taskListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         taskRecyclerView.setLayoutManager(layoutManager);
@@ -56,7 +62,7 @@ public class InboxFragment extends Fragment {
     }
 
     private void refreshTaskRecyclerView() {
-        if (data == null) {
+        if (tasks == null) {
             emptyView.setVisibility(View.VISIBLE);
             taskRecyclerView.setVisibility(View.GONE);
             taskListLayout.setBackgroundColor(getResources().getColor(R.color.colorEmptyView));

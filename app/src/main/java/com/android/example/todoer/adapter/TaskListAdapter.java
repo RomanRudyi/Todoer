@@ -8,13 +8,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.example.todoer.R;
+import com.android.example.todoer.model.TaskRealm;
+
+import io.realm.RealmResults;
 
 public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHolder> {
 
-    private String[] tasks;
+    private RealmResults<TaskRealm> tasks;
     private Listener listener;
 
-    public TaskListAdapter(String[] tasks) {
+    public TaskListAdapter(RealmResults<TaskRealm> tasks) {
         this.tasks = tasks;
     }
 
@@ -29,7 +32,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, final int position) {
         CardView cardView = holder.cardView;
         TextView taskTextView = (TextView) cardView.findViewById(R.id.task_title_text_view);
-        taskTextView.setText(tasks[position]);
+        taskTextView.setText(tasks.get(position).getTitle());
 
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,7 +46,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return tasks.length;
+        return tasks.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

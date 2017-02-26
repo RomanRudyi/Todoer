@@ -30,6 +30,13 @@ public class TaskRealm extends RealmObject {
 
     private Date date;
 
+    public TaskRealm() {}
+
+    public TaskRealm(long id, String title) {
+        this.id = id;
+        this.title = title;
+    }
+
     public long getId() {
         return id;
     }

@@ -16,11 +16,17 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.android.example.todoer.R;
+import com.android.example.todoer.model.TaskDummy;
+import com.android.example.todoer.model.TaskRealm;
+import com.android.example.todoer.realm.RealmController;
+
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String VISIBLE_FRAGMENT = "visible_fragment";
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +53,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Projects list example
         navigationView.setCheckedItem(R.id.nav_inbox);
+        // TODO: replace for users projects
         Menu menu = navigationView.getMenu();
         for (int i = 0; i < 3; i++) {
             menu.add(R.id.group_projects, i, 0, "Item " + i)
@@ -61,6 +67,17 @@ public class MainActivity extends AppCompatActivity
         transaction.addToBackStack(null);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.commit();
+
+        // TODO: delete this placeholder after testing
+        realm = Realm.getDefaultInstance();
+        if (RealmController.getNextTaskId(realm) == 0) {
+            realm.beginTransaction();
+            for (String task : TaskDummy.tasks) {
+                TaskRealm taskRealm = new TaskRealm(RealmController.getNextTaskId(realm), task);
+                realm.copyToRealm(taskRealm);
+            }
+            realm.commitTransaction();
+        }
     }
 
     @Override
