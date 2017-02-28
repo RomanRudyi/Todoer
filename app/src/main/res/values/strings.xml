@@ -20,4 +20,6 @@
     <string name="detail_title">Title</string>
     <string name="detail_project">Project</string>
     <string name="detail_priority">Priority</string>
+
+    <string name="delete">Delete</string>
 </resources>
