@@ -1,9 +1,9 @@
 package com.android.example.todoer.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -16,6 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.android.example.todoer.R;
+import com.android.example.todoer.model.TaskDummy;
+import com.android.example.todoer.model.TaskRealm;
+import com.android.example.todoer.realm.RealmController;
 
 import io.realm.Realm;
 
@@ -36,8 +39,8 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainActivity.this, TaskDetailActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -66,7 +69,7 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
 
         // TODO: delete this placeholder after testing
-        /*realm = Realm.getDefaultInstance();
+        realm = Realm.getDefaultInstance();
         if (RealmController.getNextTaskId(realm) == 0) {
             realm.beginTransaction();
             for (String task : TaskDummy.tasks) {
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity
                 realm.copyToRealm(taskRealm);
             }
             realm.commitTransaction();
-        }*/
+        }
     }
 
     @Override
