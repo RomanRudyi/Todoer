@@ -10,17 +10,17 @@ public class ProjectRealm extends RealmObject {
     public static final String COLOR = "color";
 
     @PrimaryKey
-    private long id;
+    private int id;
 
     private String name;
 
     private int color;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

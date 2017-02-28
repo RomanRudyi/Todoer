@@ -54,7 +54,7 @@ public class ProjectFragment extends Fragment {
             @Override
             public void onClick(int position) {
                 Intent intent = new Intent(getActivity(), EditorActivity.class);
-                intent.putExtra(EditorActivity.EXTRA_TASK_NO, position);
+                intent.putExtra(EditorActivity.EXTRA_TASK_ID, position);
                 startActivity(intent);
             }
         });*/

@@ -13,9 +13,9 @@ public class RealmController {
      * @param realm - Realm instance
      * @return nextTaskId
      */
-    public static long getNextTaskId(Realm realm) {
+    public static int getNextTaskId(Realm realm) {
         RealmResults<TaskRealm> tasks = realm.where(TaskRealm.class).findAllSorted(TaskRealm.ID);
-        long nextTaskId;
+        int nextTaskId;
         if (tasks.size() == 0) {
             nextTaskId = 0;
         } else {
@@ -30,9 +30,9 @@ public class RealmController {
      * @param realm - Realm instance
      * @return nextProjectId
      */
-    public static long getNextProjectId(Realm realm) {
+    public static int getNextProjectId(Realm realm) {
         RealmResults<ProjectRealm> projects = realm.where(ProjectRealm.class).findAllSorted(ProjectRealm.ID);
-        long nextProjectId;
+        int nextProjectId;
         if (projects.size() == 0) {
             nextProjectId = 1;
         } else {

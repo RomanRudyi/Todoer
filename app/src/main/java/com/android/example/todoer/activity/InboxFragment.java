@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.android.example.todoer.R;
 import com.android.example.todoer.adapter.TaskListAdapter;
@@ -17,6 +18,7 @@ import com.android.example.todoer.model.TaskRealm;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 
 public class InboxFragment extends Fragment {
@@ -39,8 +41,7 @@ public class InboxFragment extends Fragment {
         taskRecyclerView = (RecyclerView) taskListLayout.findViewById(R.id.task_recycler_view);
         emptyView = (RelativeLayout) taskListLayout.findViewById(R.id.empty_view);
 
-        // TODO: replace dummy data
-        tasks = realm.where(TaskRealm.class).findAll();
+        tasks = realm.where(TaskRealm.class).findAllSorted(TaskRealm.TITLE, Sort.ASCENDING);
 
         refreshTaskRecyclerView();
 
@@ -52,13 +53,24 @@ public class InboxFragment extends Fragment {
         taskListAdapter.setListener(new TaskListAdapter.Listener() {
             @Override
             public void onClick(int position) {
+                int taskId = tasks.get(position).getId();
+                Toast.makeText(getActivity(),
+                        "id = " + taskId,
+                        Toast.LENGTH_SHORT).show();
+
                 Intent intent = new Intent(getActivity(), EditorActivity.class);
-                intent.putExtra(EditorActivity.EXTRA_TASK_NO, position);
+                intent.putExtra(EditorActivity.EXTRA_TASK_ID, taskId);
                 startActivity(intent);
             }
         });
 
         return taskListLayout;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        refreshTaskRecyclerView();
     }
 
     private void refreshTaskRecyclerView() {

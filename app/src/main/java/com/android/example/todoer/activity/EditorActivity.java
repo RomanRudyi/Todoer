@@ -19,13 +19,13 @@ import io.realm.Realm;
 
 public class EditorActivity extends AppCompatActivity {
 
-    public static String EXTRA_TASK_NO = "taskNo";
+    public static String EXTRA_TASK_ID = "taskId";
 
     private EditText titleEditText;
 
     private Realm realm;
     private TaskRealm task;
-    private int taskNo;
+    private int taskId;
     private boolean isExistedTask = false;
     private String title;
 
@@ -41,9 +41,12 @@ public class EditorActivity extends AppCompatActivity {
         realm = Realm.getDefaultInstance();
         titleEditText = (EditText) findViewById(R.id.title_edit_text);
 
-        if (getIntent().hasExtra(EXTRA_TASK_NO)) {
-            taskNo = getIntent().getExtras().getInt(EXTRA_TASK_NO);
-            task = realm.where(TaskRealm.class).equalTo(TaskRealm.ID, taskNo).findFirst();
+        if (getIntent().hasExtra(EXTRA_TASK_ID)) {
+            taskId = getIntent().getExtras().getInt(EXTRA_TASK_ID);
+            Toast.makeText(EditorActivity.this,
+                    "id = " + taskId,
+                    Toast.LENGTH_SHORT).show();
+            task = realm.where(TaskRealm.class).equalTo(TaskRealm.ID, taskId).findFirst();
             titleEditText.setText(task.getTitle());
             isExistedTask = true;
         }
@@ -97,5 +100,24 @@ public class EditorActivity extends AppCompatActivity {
             menuItem.setVisible(false);
         }
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_delete) {
+            if (isExistedTask) {
+                realm.beginTransaction();
+                task.deleteFromRealm();
+                realm.commitTransaction();
+                Toast.makeText(EditorActivity.this,
+                        "Task deleted",
+                        Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(EditorActivity.this, MainActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

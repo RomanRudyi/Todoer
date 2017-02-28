@@ -9,16 +9,16 @@ public class TaskRealm extends RealmObject {
 
     public static final String ID = "id";
     public static final String PROJECT_ID = "projectId";
-    public static final String TITLE = "TITLE";
+    public static final String TITLE = "title";
     public static final String DESCRIPTION = "description";
     public static final String PRIORITY = "priority";
     public static final String REPEATABLE = "repeatable";
     public static final String DATE= "date";
 
     @PrimaryKey
-    private long id;
+    private int id;
 
-    private long projectId;
+    private int projectId;
 
     private String title;
 
@@ -32,24 +32,24 @@ public class TaskRealm extends RealmObject {
 
     public TaskRealm() {}
 
-    public TaskRealm(long id, String title) {
+    public TaskRealm(int id, String title) {
         this.id = id;
         this.title = title;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public long getProjectId() {
+    public int getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(long projectId) {
+    public void setProjectId(int projectId) {
         this.projectId = projectId;
     }
 
