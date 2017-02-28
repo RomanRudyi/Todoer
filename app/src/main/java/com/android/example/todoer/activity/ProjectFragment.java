@@ -53,8 +53,8 @@ public class ProjectFragment extends Fragment {
         taskListAdapter.setListener(new TaskListAdapter.Listener() {
             @Override
             public void onClick(int position) {
-                Intent intent = new Intent(getActivity(), TaskDetailActivity.class);
-                intent.putExtra(TaskDetailActivity.EXTRA_TASK_NO, position);
+                Intent intent = new Intent(getActivity(), EditorActivity.class);
+                intent.putExtra(EditorActivity.EXTRA_TASK_NO, position);
                 startActivity(intent);
             }
         });*/

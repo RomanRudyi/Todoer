@@ -15,7 +15,7 @@ import com.android.example.todoer.realm.RealmController;
 
 import io.realm.Realm;
 
-public class TaskDetailActivity extends AppCompatActivity {
+public class EditorActivity extends AppCompatActivity {
 
     public static String EXTRA_TASK_NO = "taskNo";
 
@@ -30,7 +30,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_detail);
+        setContentView(R.layout.activity_editor);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -73,10 +73,10 @@ public class TaskDetailActivity extends AppCompatActivity {
             realm.commitTransaction();
         }
 
-        Toast.makeText(TaskDetailActivity.this,
+        Toast.makeText(EditorActivity.this,
                 "Task saved",
                 Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(TaskDetailActivity.this, MainActivity.class);
+        Intent intent = new Intent(EditorActivity.this, MainActivity.class);
         startActivity(intent);
     }
 }

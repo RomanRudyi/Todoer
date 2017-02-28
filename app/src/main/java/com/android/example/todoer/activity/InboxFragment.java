@@ -52,8 +52,8 @@ public class InboxFragment extends Fragment {
         taskListAdapter.setListener(new TaskListAdapter.Listener() {
             @Override
             public void onClick(int position) {
-                Intent intent = new Intent(getActivity(), TaskDetailActivity.class);
-                intent.putExtra(TaskDetailActivity.EXTRA_TASK_NO, position);
+                Intent intent = new Intent(getActivity(), EditorActivity.class);
+                intent.putExtra(EditorActivity.EXTRA_TASK_NO, position);
                 startActivity(intent);
             }
         });
@@ -62,7 +62,7 @@ public class InboxFragment extends Fragment {
     }
 
     private void refreshTaskRecyclerView() {
-        if (tasks == null) {
+        if (tasks == null || tasks.size() == 0) {
             emptyView.setVisibility(View.VISIBLE);
             taskRecyclerView.setVisibility(View.GONE);
             taskListLayout.setBackgroundColor(getResources().getColor(R.color.colorEmptyView));
