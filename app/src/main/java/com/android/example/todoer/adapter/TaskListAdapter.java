@@ -10,6 +10,10 @@ import android.widget.TextView;
 import com.android.example.todoer.R;
 import com.android.example.todoer.model.TaskRealm;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import io.realm.RealmResults;
 
 public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHolder> {
@@ -32,7 +36,11 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, final int position) {
         CardView cardView = holder.cardView;
         TextView taskTextView = (TextView) cardView.findViewById(R.id.task_title_text_view);
-        taskTextView.setText(tasks.get(position).getTitle());
+        DateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
+        String taskText = tasks.get(position).getTitle() + "\nDate: " +
+                dateFormat.format(tasks.get(position).getDate()) + "\nPriority: " +
+                tasks.get(position).getPriority();
+        taskTextView.setText(taskText);
 
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -20,6 +20,8 @@ import com.android.example.todoer.model.TaskDummy;
 import com.android.example.todoer.model.TaskRealm;
 import com.android.example.todoer.realm.RealmController;
 
+import java.util.Date;
+
 import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity
@@ -72,8 +74,10 @@ public class MainActivity extends AppCompatActivity
         realm = Realm.getDefaultInstance();
         if (RealmController.getNextTaskId(realm) == 0) {
             realm.beginTransaction();
-            for (String task : TaskDummy.tasks) {
-                TaskRealm taskRealm = new TaskRealm(RealmController.getNextTaskId(realm), task);
+            long dateMillis = new Date().getTime();
+            for (String taskTitle : TaskDummy.tasks) {
+                TaskRealm taskRealm = new TaskRealm(RealmController.getNextTaskId(realm),
+                        taskTitle, dateMillis, TaskRealm.PRIORITY_NONE);
                 realm.copyToRealm(taskRealm);
             }
             realm.commitTransaction();

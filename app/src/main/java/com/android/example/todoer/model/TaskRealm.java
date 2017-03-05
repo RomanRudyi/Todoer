@@ -15,6 +15,11 @@ public class TaskRealm extends RealmObject {
     public static final String REPEATABLE = "repeatable";
     public static final String DATE= "date";
 
+    public static final int PRIORITY_NONE = 0;
+    public static final int PRIORITY_LOW = 1;
+    public static final int PRIORITY_MEDIUM = 2;
+    public static final int PRIORITY_HIGH = 3;
+
     @PrimaryKey
     private int id;
 
@@ -28,13 +33,23 @@ public class TaskRealm extends RealmObject {
 
     private boolean repeatable;
 
-    private Date date;
+    private long date;
 
     public TaskRealm() {}
 
+    public TaskRealm(int id, String title, long date, int priority) {
+        this.id = id;
+        this.title = title;
+        this.date = date;
+        this.priority = priority;
+    }
+
+    // TODO: replace after testing
     public TaskRealm(int id, String title) {
         this.id = id;
         this.title = title;
+        this.date = new Date().getTime();
+        this.priority = PRIORITY_NONE;
     }
 
     public int getId() {
@@ -85,11 +100,11 @@ public class TaskRealm extends RealmObject {
         this.repeatable = repeatable;
     }
 
-    public Date getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(long date) {
         this.date = date;
     }
 }
