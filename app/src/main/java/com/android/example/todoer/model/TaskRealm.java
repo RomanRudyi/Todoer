@@ -9,6 +9,7 @@ public class TaskRealm extends RealmObject {
 
     public static final String ID = "id";
     public static final String PROJECT_ID = "projectId";
+    public static final String IS_ACTIVE = "isActive";
     public static final String TITLE = "title";
     public static final String DESCRIPTION = "description";
     public static final String PRIORITY = "priority";
@@ -24,6 +25,8 @@ public class TaskRealm extends RealmObject {
     private int id;
 
     private int projectId;
+
+    private boolean isActive;
 
     private String title;
 
@@ -42,6 +45,7 @@ public class TaskRealm extends RealmObject {
         this.title = title;
         this.date = date;
         this.priority = priority;
+        isActive = true;
     }
 
     // TODO: replace after testing
@@ -50,6 +54,7 @@ public class TaskRealm extends RealmObject {
         this.title = title;
         this.date = new Date().getTime();
         this.priority = PRIORITY_NONE;
+        isActive = true;
     }
 
     public int getId() {
@@ -76,6 +81,14 @@ public class TaskRealm extends RealmObject {
         this.title = title;
     }
 
+    public long getDate() {
+        return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -100,11 +113,11 @@ public class TaskRealm extends RealmObject {
         this.repeatable = repeatable;
     }
 
-    public long getDate() {
-        return date;
+    public boolean isActive() {
+        return isActive;
     }
 
-    public void setDate(long date) {
-        this.date = date;
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

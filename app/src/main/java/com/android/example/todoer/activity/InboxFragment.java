@@ -41,11 +41,13 @@ public class InboxFragment extends Fragment {
         taskRecyclerView = (RecyclerView) taskListLayout.findViewById(R.id.task_recycler_view);
         emptyView = (RelativeLayout) taskListLayout.findViewById(R.id.empty_view);
 
-        tasks = realm.where(TaskRealm.class).findAllSorted(TaskRealm.TITLE, Sort.ASCENDING);
+        tasks = realm.where(TaskRealm.class).findAllSorted(
+                new String[] {TaskRealm.IS_ACTIVE, TaskRealm.TITLE},
+                new Sort[] {Sort.DESCENDING, Sort.ASCENDING});
 
         refreshTaskRecyclerView();
 
-        taskListAdapter = new TaskListAdapter(tasks);
+        taskListAdapter = new TaskListAdapter(getActivity(), tasks);
         taskRecyclerView.setAdapter(taskListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         taskRecyclerView.setLayoutManager(layoutManager);
