@@ -9,11 +9,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.example.todoer.R;
 import com.android.example.todoer.model.TaskRealm;
 import com.android.example.todoer.realm.RealmController;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import io.realm.Realm;
 
@@ -22,12 +28,16 @@ public class EditorActivity extends AppCompatActivity {
     public static String EXTRA_TASK_ID = "taskId";
 
     private EditText titleEditText;
+    private TextView dateTextView;
+    private TextView priorityTextView;
 
     private Realm realm;
     private TaskRealm task;
     private int taskId;
     private boolean isExistedTask = false;
     private String title;
+
+    DateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +50,8 @@ public class EditorActivity extends AppCompatActivity {
 
         realm = Realm.getDefaultInstance();
         titleEditText = (EditText) findViewById(R.id.title_edit_text);
+        dateTextView = (TextView) findViewById(R.id.editor_date);
+        priorityTextView = (TextView) findViewById(R.id.editor_priority);
 
         if (getIntent().hasExtra(EXTRA_TASK_ID)) {
             taskId = getIntent().getExtras().getInt(EXTRA_TASK_ID);
@@ -48,7 +60,14 @@ public class EditorActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
             task = realm.where(TaskRealm.class).equalTo(TaskRealm.ID, taskId).findFirst();
             titleEditText.setText(task.getTitle());
+            dateTextView.setText(dateFormat.format(task.getDate()));
+            setupPriority();
+
             isExistedTask = true;
+        } else {
+            dateTextView.setText(dateFormat.format(new Date().getTime()));
+            priorityTextView.setText(getString(R.string.priority_none));
+            priorityTextView.setTextColor(getColor(R.color.colorPriorityNone));
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -58,6 +77,33 @@ public class EditorActivity extends AppCompatActivity {
                 saveTask();
             }
         });
+    }
+
+    private void setupPriority() {
+        int priority = task.getPriority();
+        int priorityColor;
+        String priorityText;
+
+        switch (priority) {
+            case TaskRealm.PRIORITY_LOW:
+                priorityColor = getColor(R.color.colorPriorityLow);
+                priorityText = getString(R.string.priority_low);
+                break;
+            case TaskRealm.PRIORITY_MEDIUM:
+                priorityColor = getColor(R.color.colorPriorityMedium);
+                priorityText = getString(R.string.priority_medium);
+                break;
+            case TaskRealm.PRIORITY_HIGH:
+                priorityColor = getColor(R.color.colorPriorityHigh);
+                priorityText = getString(R.string.priority_high);
+                break;
+            default:
+                priorityColor = getColor(R.color.colorPriorityNone);
+                priorityText = getString(R.string.priority_none);
+        }
+
+        priorityTextView.setText(priorityText);
+        priorityTextView.setTextColor(priorityColor);
     }
 
     private void saveTask() {

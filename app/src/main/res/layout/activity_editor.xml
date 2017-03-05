@@ -131,8 +131,7 @@
                         android:layout_height="wrap_content"
                         tools:text="High"
                         tools:textColor="@color/colorPriorityLow"
-                        android:textAppearance="@android:style/TextAppearance.Small"
-                        android:textColor="@color/colorEditor"/>
+                        android:textAppearance="@android:style/TextAppearance.Small"/>
 
                 </LinearLayout>
 
