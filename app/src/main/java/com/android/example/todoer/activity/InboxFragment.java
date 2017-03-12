@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.android.example.todoer.R;
 import com.android.example.todoer.adapter.TaskListAdapter;
@@ -56,9 +55,9 @@ public class InboxFragment extends Fragment {
             @Override
             public void onClick(int position) {
                 int taskId = tasks.get(position).getId();
-                Toast.makeText(getActivity(),
+                /*Toast.makeText(getActivity(),
                         "id = " + taskId,
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT).show();*/
 
                 Intent intent = new Intent(getActivity(), EditorActivity.class);
                 intent.putExtra(EditorActivity.EXTRA_TASK_ID, taskId);

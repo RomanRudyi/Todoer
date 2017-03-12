@@ -52,12 +52,12 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setCheckedItem(R.id.nav_inbox);
         // TODO: replace for users projects
-        Menu menu = navigationView.getMenu();
+        /*Menu menu = navigationView.getMenu();
         for (int i = 0; i < 3; i++) {
             menu.add(R.id.group_projects, i, 0, "Item " + i)
                     .setIcon(R.drawable.ic_project)
                     .setCheckable(true);
-        }
+        }*/
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content_frame, new InboxFragment(), VISIBLE_FRAGMENT);

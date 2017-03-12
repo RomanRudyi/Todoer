@@ -20,6 +20,7 @@
     <string name="editor_title">Title</string>
     <string name="editor_project">Project</string>
     <string name="editor_priority">Priority</string>
+    <string name="select_priority">Select priority</string>
     <string name="priority_none">None</string>
     <string name="priority_low">Low</string>
     <string name="priority_medium">Medium</string>
@@ -28,6 +29,6 @@
 
     <string name="delete">Delete</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
 </resources>
