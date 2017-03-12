@@ -41,8 +41,8 @@ public class InboxFragment extends Fragment {
         emptyView = (RelativeLayout) taskListLayout.findViewById(R.id.empty_view);
 
         tasks = realm.where(TaskRealm.class).findAllSorted(
-                new String[] {TaskRealm.IS_ACTIVE, TaskRealm.TITLE},
-                new Sort[] {Sort.DESCENDING, Sort.ASCENDING});
+                new String[] {TaskRealm.IS_ACTIVE, TaskRealm.PRIORITY, TaskRealm.DATE, TaskRealm.TITLE},
+                new Sort[] {Sort.DESCENDING, Sort.DESCENDING, Sort.ASCENDING, Sort.ASCENDING});
 
         refreshTaskRecyclerView();
 
@@ -54,7 +54,7 @@ public class InboxFragment extends Fragment {
         taskListAdapter.setListener(new TaskListAdapter.Listener() {
             @Override
             public void onClick(int position) {
-                int taskId = tasks.get(position).getId();
+                long taskId = tasks.get(position).getId();
                 /*Toast.makeText(getActivity(),
                         "id = " + taskId,
                         Toast.LENGTH_SHORT).show();*/

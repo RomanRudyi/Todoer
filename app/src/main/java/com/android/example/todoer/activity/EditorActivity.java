@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import com.android.example.todoer.R;
 import com.android.example.todoer.model.TaskRealm;
-import com.android.example.todoer.realm.RealmController;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -53,7 +52,7 @@ public class EditorActivity extends AppCompatActivity {
 
     private Realm realm;
     private TaskRealm task;
-    private int taskId;
+    private long taskId;
     private boolean isExistedTask = false;
     private String title;
 
@@ -73,7 +72,7 @@ public class EditorActivity extends AppCompatActivity {
 
         // Set the task's parameters
         if (getIntent().hasExtra(EXTRA_TASK_ID)) {
-            taskId = getIntent().getExtras().getInt(EXTRA_TASK_ID);
+            taskId = getIntent().getExtras().getLong(EXTRA_TASK_ID);
             /*Toast.makeText(EditorActivity.this,
                     "id = " + taskId,
                     Toast.LENGTH_SHORT).show();*/
@@ -91,7 +90,8 @@ public class EditorActivity extends AppCompatActivity {
 
             isExistedTask = true;
         } else {
-            dateTextView.setText(dateFormat.format(new Date().getTime()));
+            calendar = Calendar.getInstance();
+            dateTextView.setText(dateFormat.format(calendar.getTimeInMillis()));
             priorityTextView.setText(getString(R.string.priority_none));
             priorityTextView.setTextColor(getColor(R.color.colorPriorityNone));
             priority = TaskRealm.PRIORITY_NONE;
@@ -172,7 +172,8 @@ public class EditorActivity extends AppCompatActivity {
         } else {
             realm.beginTransaction();
             TaskRealm taskRealm = new TaskRealm();
-            taskRealm.setId(RealmController.getNextTaskId(realm));
+            //taskRealm.setId(RealmController.getNextTaskId(realm));
+            taskRealm.setId(new Date().getTime());
             taskRealm.setTitle(title);
             taskRealm.setDate(calendar.getTimeInMillis());
             taskRealm.setPriority(priority);

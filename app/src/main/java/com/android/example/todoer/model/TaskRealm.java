@@ -20,7 +20,7 @@ public class TaskRealm extends RealmObject {
     public static final int PRIORITY_HIGH = 3;
 
     @PrimaryKey
-    private int id;
+    private long id;
 
     private int projectId;
 
@@ -54,11 +54,11 @@ public class TaskRealm extends RealmObject {
         isActive = true;
     }*/
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
