@@ -1,14 +1,19 @@
 package com.android.example.todoer.activity;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +23,7 @@ import com.android.example.todoer.realm.RealmController;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -28,16 +34,20 @@ public class EditorActivity extends AppCompatActivity {
     public static String EXTRA_TASK_ID = "taskId";
 
     private EditText titleEditText;
-    private TextView dateTextView;
+
     private TextView priorityTextView;
+
+    public static final String DATE_PICKER_TAG = "datePicker";
+    public static final DateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
+    private LinearLayout dateContainer;
+    private TextView dateTextView;
+    public static Calendar calendar = Calendar.getInstance();
 
     private Realm realm;
     private TaskRealm task;
     private int taskId;
     private boolean isExistedTask = false;
     private String title;
-
-    DateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +85,15 @@ public class EditorActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 saveTask();
+            }
+        });
+
+        dateContainer = (LinearLayout) findViewById(R.id.date_container);
+        dateContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment datePickerFragment = new DatePickerFragment();
+                datePickerFragment.show(getSupportFragmentManager(), DATE_PICKER_TAG);
             }
         });
     }
@@ -116,10 +135,17 @@ public class EditorActivity extends AppCompatActivity {
         if (isExistedTask) {
             realm.beginTransaction();
             task.setTitle(title);
+            task.setDate(calendar.getTimeInMillis());
             realm.commitTransaction();
         } else {
             realm.beginTransaction();
-            TaskRealm taskRealm = new TaskRealm(RealmController.getNextTaskId(realm), title);
+            TaskRealm taskRealm = new TaskRealm();
+            taskRealm.setId(RealmController.getNextTaskId(realm));
+            taskRealm.setTitle(title);
+            taskRealm.setDate(calendar.getTimeInMillis());
+            // TODO: replace to real priority
+            taskRealm.setPriority(TaskRealm.PRIORITY_NONE);
+            taskRealm.setActive(true);
             realm.copyToRealm(taskRealm);
             realm.commitTransaction();
         }
@@ -165,5 +191,30 @@ public class EditorActivity extends AppCompatActivity {
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        private TextView dateTextView;
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            dateTextView = (TextView) getActivity().findViewById(R.id.editor_date);
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            // Do something with the date chosen by the user
+            calendar.set(year, month, day);
+            dateTextView.setText(dateFormat.format(calendar.getTimeInMillis()));
+        }
     }
 }
