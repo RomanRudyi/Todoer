@@ -270,48 +270,7 @@ public class EditorActivity extends AppCompatActivity {
 
             priorityRadioGroup = (RadioGroup)
                     dialogView.findViewById(R.id.priority_radio_group);
-            priorityRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    int priorityColor;
-                    String priorityText;
 
-                    switch (checkedId) {
-                        case R.id.rb_priority_none:
-                            localPriority = TaskRealm.PRIORITY_NONE;
-                            priorityColor = getActivity().getResources()
-                                    .getColor(R.color.colorPriorityNone);
-                            priorityText = getString(R.string.priority_none);
-                            break;
-                        case R.id.rb_priority_low:
-                            localPriority = TaskRealm.PRIORITY_LOW;
-                            priorityColor = getActivity().getResources()
-                                    .getColor(R.color.colorPriorityLow);
-                            priorityText = getString(R.string.priority_low);
-                            break;
-                        case R.id.rb_priority_medium:
-                            localPriority = TaskRealm.PRIORITY_MEDIUM;
-                            priorityColor = getActivity().getResources()
-                                    .getColor(R.color.colorPriorityMedium);
-                            priorityText = getString(R.string.priority_medium);
-                            break;
-                        case R.id.rb_priority_high:
-                            localPriority = TaskRealm.PRIORITY_HIGH;
-                            priorityColor = getActivity().getResources()
-                                    .getColor(R.color.colorPriorityHigh);
-                            priorityText = getString(R.string.priority_high);
-                            break;
-                        default:
-                            localPriority = priority;
-                            priorityColor = getActivity().getResources()
-                                    .getColor(R.color.colorPriorityNone);
-                            priorityText = getString(R.string.priority_none);
-                    }
-
-                    priorityTextView.setText(priorityText);
-                    priorityTextView.setTextColor(priorityColor);
-                }
-            });
 
             builder.setTitle(R.string.select_priority)
                     // Inflate and set the layout for the dialog
@@ -319,7 +278,7 @@ public class EditorActivity extends AppCompatActivity {
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            priority = localPriority;
+                            priorityChanged(priorityRadioGroup.getCheckedRadioButtonId());
                         }
                     })
                     .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -330,6 +289,41 @@ public class EditorActivity extends AppCompatActivity {
                     });
 
             return builder.create();
+        }
+
+        private void priorityChanged(int checkedId) {
+            int priorityColor = 0;
+            String priorityText = "";
+
+            switch (checkedId) {
+                case R.id.rb_priority_none:
+                    priority = TaskRealm.PRIORITY_NONE;
+                    priorityColor = getActivity().getResources()
+                            .getColor(R.color.colorPriorityNone);
+                    priorityText = getString(R.string.priority_none);
+                    break;
+                case R.id.rb_priority_low:
+                    priority = TaskRealm.PRIORITY_LOW;
+                    priorityColor = getActivity().getResources()
+                            .getColor(R.color.colorPriorityLow);
+                    priorityText = getString(R.string.priority_low);
+                    break;
+                case R.id.rb_priority_medium:
+                    priority = TaskRealm.PRIORITY_MEDIUM;
+                    priorityColor = getActivity().getResources()
+                            .getColor(R.color.colorPriorityMedium);
+                    priorityText = getString(R.string.priority_medium);
+                    break;
+                case R.id.rb_priority_high:
+                    priority = TaskRealm.PRIORITY_HIGH;
+                    priorityColor = getActivity().getResources()
+                            .getColor(R.color.colorPriorityHigh);
+                    priorityText = getString(R.string.priority_high);
+                    break;
+            }
+
+            priorityTextView.setText(priorityText);
+            priorityTextView.setTextColor(priorityColor);
         }
     }
 }

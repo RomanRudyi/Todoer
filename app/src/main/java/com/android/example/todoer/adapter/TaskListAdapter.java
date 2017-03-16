@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,6 +31,9 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
     private Listener listener;
     private Realm realm;
 
+    // Remember the last item shown on screen
+    private int lastPosition = -1;
+
     public TaskListAdapter(Context context, RealmResults<TaskRealm> tasks) {
         this.context = context;
         this.tasks = tasks;
@@ -44,25 +49,18 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        CardView cardView = holder.cardView;
-
-        TextView taskTitleTextView = (TextView) cardView.findViewById(R.id.item_title);
-        TextView taskDateTextView = (TextView) cardView.findViewById(R.id.item_date);
-        ImageView taskProjectImageView = (ImageView) cardView.findViewById(R.id.item_project_color);
-        CheckBox taskCheckBox = (CheckBox) cardView.findViewById(R.id.item_check_box);
-
         final TaskRealm task = tasks.get(position);
         String titleText = task.getTitle();
         DateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
         String dateText = dateFormat.format(task.getDate());
         final boolean isActive = task.isActive();
 
-        taskTitleTextView.setText(titleText);
-        taskDateTextView.setText(dateText);
+        holder.taskTitleTextView.setText(titleText);
+        holder.taskDateTextView.setText(dateText);
 
-        setupCheckBox(taskCheckBox, position);
-        taskCheckBox.setChecked(!isActive);
-        taskCheckBox.setOnClickListener(new View.OnClickListener() {
+        setupCheckBox(holder.taskCheckBox, position);
+        holder.taskCheckBox.setChecked(!isActive);
+        holder.taskCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isActive) {
@@ -79,7 +77,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
             }
         });
 
-        cardView.setOnClickListener(new View.OnClickListener() {
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (listener != null) {
@@ -87,6 +85,27 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
                 }
             }
         });
+
+        // Applying the animation
+        setAnimation(holder.itemView, position);
+    }
+
+    /**
+     * The key method to apply the animation
+     * @param viewToAnimate
+     * @param position
+     */
+    private void setAnimation(View viewToAnimate, int position) {
+        if (position > lastPosition) {
+            Animation animation =
+                    AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+
+            // TODO: figured out if I need it
+            animation.setDuration(500);
+
+            viewToAnimate.setAnimation(animation);
+            lastPosition = position;
+        }
     }
 
     @Override
@@ -95,11 +114,19 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private CardView cardView;
+        CardView cardView;
+        TextView taskTitleTextView;
+        TextView taskDateTextView;
+        ImageView taskProjectImageView;
+        CheckBox taskCheckBox;
 
-        public ViewHolder(CardView cardView) {
-            super(cardView);
-            this.cardView = cardView;
+        public ViewHolder(View itemView) {
+            super(itemView);
+            cardView = (CardView) itemView.findViewById(R.id.cardView);
+            taskTitleTextView = (TextView) itemView.findViewById(R.id.item_title);
+            taskDateTextView = (TextView) itemView.findViewById(R.id.item_date);
+            taskProjectImageView = (ImageView) itemView.findViewById(R.id.item_project_color);
+            taskCheckBox = (CheckBox) itemView.findViewById(R.id.item_check_box);
         }
     }
 
