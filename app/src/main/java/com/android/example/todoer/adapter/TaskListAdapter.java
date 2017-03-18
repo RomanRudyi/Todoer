@@ -48,12 +48,14 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         final TaskRealm task = tasks.get(position);
         String titleText = task.getTitle();
         DateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
         String dateText = dateFormat.format(task.getDate());
         final boolean isActive = task.isActive();
+
+        setupTaskTitleColor(holder, isActive);
 
         holder.taskTitleTextView.setText(titleText);
         holder.taskDateTextView.setText(dateText);
@@ -67,11 +69,13 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
                     realm.beginTransaction();
                     task.setActive(false);
                     realm.commitTransaction();
+                    setupTaskTitleColor(holder, isActive);
                     notifyDataSetChanged();
                 } else {
                     realm.beginTransaction();
                     task.setActive(true);
                     realm.commitTransaction();
+                    setupTaskTitleColor(holder, isActive);
                     notifyDataSetChanged();
                 }
             }
@@ -91,16 +95,32 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
     }
 
     /**
+     * The helper method to setup task title color
+     * @param holder - ViewHolder
+     * @param isActive - task state
+     */
+    private void setupTaskTitleColor(ViewHolder holder, boolean isActive) {
+        if (isActive) {
+            int activeColor =
+                    context.getResources().getColor(android.R.color.black);
+            holder.taskTitleTextView.setTextColor(activeColor);
+        } else {
+            int completedColor =
+                    context.getResources().getColor(R.color.colorEditor);
+            holder.taskTitleTextView.setTextColor(completedColor);
+        }
+    }
+
+    /**
      * The key method to apply the animation
-     * @param viewToAnimate
-     * @param position
+     * @param viewToAnimate - task item
+     * @param position - task position
      */
     private void setAnimation(View viewToAnimate, int position) {
         if (position > lastPosition) {
             Animation animation =
                     AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
 
-            // TODO: figured out if I need it
             animation.setDuration(500);
 
             viewToAnimate.setAnimation(animation);
@@ -157,7 +177,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
         }
 
         int states[][] = {{android.R.attr.state_checked}, {}};
-        int colors[] = {context.getResources().getColor(R.color.colorEditor), colorCheckBox};
+        int colors[] = {context.getResources().getColor(R.color.colorCompletedTask), colorCheckBox};
         CompoundButtonCompat.setButtonTintList(checkBox, new ColorStateList(states, colors));
     }
 }

@@ -16,14 +16,17 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.android.example.todoer.R;
+import com.android.example.todoer.model.ProjectRealm;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String VISIBLE_FRAGMENT = "visible_fragment";
     private Realm realm;
+    private RealmResults<ProjectRealm> projects;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        realm = Realm.getDefaultInstance();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -51,12 +56,28 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         navigationView.setCheckedItem(R.id.nav_inbox);
+
         // TODO: replace for users projects
-        /*Menu menu = navigationView.getMenu();
-        for (int i = 0; i < 3; i++) {
-            menu.add(R.id.group_projects, i, 0, "Item " + i)
+        /*if (realm.where(ProjectRealm.class).findAll().size() == 0) {
+            for (int i = 0; i < 3; i++) {
+                realm.beginTransaction();
+                ProjectRealm project = new ProjectRealm();
+                project.setName("Project #" + i);
+                realm.copyToRealm(project);
+                realm.commitTransaction();
+            }
+        }
+
+        projects = realm.where(ProjectRealm.class).findAll();
+
+        Menu menu = navigationView.getMenu();
+        for (ProjectRealm project : projects) {
+            long projectId = project.getId();
+            String projectName = project.getName();
+            // TODO: using ListView
+           *//* menu.add(R.id.group_projects, projectId, 0, projectName)
                     .setIcon(R.drawable.ic_project)
-                    .setCheckable(true);
+                    .setCheckable(true);*//*
         }*/
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

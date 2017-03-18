@@ -1,5 +1,7 @@
 package com.android.example.todoer.model;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -36,7 +38,9 @@ public class TaskRealm extends RealmObject {
 
     private long date;
 
-    public TaskRealm() {}
+    public TaskRealm() {
+        setId(new Date().getTime());
+    }
 
     /*public TaskRealm(int id, String title, long date, int priority) {
         this.id = id;
@@ -58,7 +62,7 @@ public class TaskRealm extends RealmObject {
         return id;
     }
 
-    public void setId(long id) {
+    private void setId(long id) {
         this.id = id;
     }
 

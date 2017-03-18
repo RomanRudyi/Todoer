@@ -27,7 +27,6 @@ import com.android.example.todoer.model.TaskRealm;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import io.realm.Realm;
@@ -172,8 +171,6 @@ public class EditorActivity extends AppCompatActivity {
         } else {
             realm.beginTransaction();
             TaskRealm taskRealm = new TaskRealm();
-            //taskRealm.setId(RealmController.getNextTaskId(realm));
-            taskRealm.setId(new Date().getTime());
             taskRealm.setTitle(title);
             taskRealm.setDate(calendar.getTimeInMillis());
             taskRealm.setPriority(priority);
