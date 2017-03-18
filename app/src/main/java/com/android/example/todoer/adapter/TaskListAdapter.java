@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.example.todoer.R;
+import com.android.example.todoer.model.OnRecyclerViewItemClickListener;
 import com.android.example.todoer.model.TaskRealm;
 
 import java.text.DateFormat;
@@ -28,7 +29,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
 
     private Context context;
     private RealmResults<TaskRealm> tasks;
-    private Listener listener;
+    private OnRecyclerViewItemClickListener listener;
     private Realm realm;
 
     // Remember the last item shown on screen
@@ -142,19 +143,15 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
 
         public ViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView) itemView.findViewById(R.id.cardView);
+            cardView = (CardView) itemView.findViewById(R.id.task_card_view);
             taskTitleTextView = (TextView) itemView.findViewById(R.id.item_title);
             taskDateTextView = (TextView) itemView.findViewById(R.id.item_date);
-            taskProjectImageView = (ImageView) itemView.findViewById(R.id.item_project_color);
+            taskProjectImageView = (ImageView) itemView.findViewById(R.id.project_color_image_view);
             taskCheckBox = (CheckBox) itemView.findViewById(R.id.item_check_box);
         }
     }
 
-    public interface Listener {
-        void onClick(int position);
-    }
-
-    public void setListener(Listener listener) {
+    public void setListener(OnRecyclerViewItemClickListener listener) {
         this.listener = listener;
     }
 

@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 
 import com.android.example.todoer.R;
 import com.android.example.todoer.adapter.TaskListAdapter;
+import com.android.example.todoer.model.OnRecyclerViewItemClickListener;
 import com.android.example.todoer.model.TaskRealm;
 
 import io.realm.Realm;
@@ -51,14 +52,10 @@ public class InboxFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         taskRecyclerView.setLayoutManager(layoutManager);
 
-        taskListAdapter.setListener(new TaskListAdapter.Listener() {
+        taskListAdapter.setListener(new OnRecyclerViewItemClickListener() {
             @Override
             public void onClick(int position) {
                 long taskId = tasks.get(position).getId();
-                /*Toast.makeText(getActivity(),
-                        "id = " + taskId,
-                        Toast.LENGTH_SHORT).show();*/
-
                 Intent intent = new Intent(getActivity(), EditorActivity.class);
                 intent.putExtra(EditorActivity.EXTRA_TASK_ID, taskId);
                 startActivity(intent);

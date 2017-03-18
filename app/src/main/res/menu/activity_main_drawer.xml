@@ -10,16 +10,12 @@
             android:id="@+id/nav_calendar"
             android:icon="@drawable/ic_calendar"
             android:title="@string/drawer_calendar" />
-    </group>
 
-    <item android:title="@string/drawer_projects">
-        <menu>
-            <group
-                android:id="@+id/group_projects"
-                android:checkableBehavior="single">
-            </group>
-        </menu>
-    </item>
+        <item
+            android:id="@+id/nav_projects"
+            android:icon="@drawable/ic_project"
+            android:title="@string/drawer_projects" />
+    </group>
 
     <item
         android:id="@+id/nav_add_list"

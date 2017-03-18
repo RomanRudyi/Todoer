@@ -58,47 +58,22 @@ public class MainActivity extends AppCompatActivity
         navigationView.setCheckedItem(R.id.nav_inbox);
 
         // TODO: replace for users projects
-        /*if (realm.where(ProjectRealm.class).findAll().size() == 0) {
+        if (realm.where(ProjectRealm.class).findAll().size() == 0) {
             for (int i = 0; i < 3; i++) {
                 realm.beginTransaction();
                 ProjectRealm project = new ProjectRealm();
                 project.setName("Project #" + i);
+                project.setColor(i);
                 realm.copyToRealm(project);
                 realm.commitTransaction();
             }
         }
-
-        projects = realm.where(ProjectRealm.class).findAll();
-
-        Menu menu = navigationView.getMenu();
-        for (ProjectRealm project : projects) {
-            long projectId = project.getId();
-            String projectName = project.getName();
-            // TODO: using ListView
-           *//* menu.add(R.id.group_projects, projectId, 0, projectName)
-                    .setIcon(R.drawable.ic_project)
-                    .setCheckable(true);*//*
-        }*/
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content_frame, new InboxFragment(), VISIBLE_FRAGMENT);
         transaction.addToBackStack(null);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.commit();
-
-        // TODO: delete this placeholder after testing
-        /*realm = Realm.getDefaultInstance();
-        if (RealmController.getNextTaskId(realm) == 0) {
-            realm.beginTransaction();
-            long dateMillis = new Date().getTime();
-            Random random = new Random();
-            for (String taskTitle : TaskDummy.tasks) {
-                TaskRealm taskRealm = new TaskRealm(RealmController.getNextTaskId(realm),
-                        taskTitle, dateMillis, random.nextInt(3));
-                realm.copyToRealm(taskRealm);
-            }
-            realm.commitTransaction();
-        }*/
     }
 
     @Override
@@ -145,6 +120,8 @@ public class MainActivity extends AppCompatActivity
             fragment = new InboxFragment();
         } else if (id == R.id.nav_calendar) {
             fragment = new InboxFragment();
+        } else if (id == R.id.nav_projects) {
+            fragment = new ProjectListFragment();
         } else if (id ==  R.id.nav_add_list) {
             fragment = new InboxFragment();
         } else {
