@@ -4,4 +4,11 @@
     <color name="colorPrimaryDark">#004e52</color>
     <color name="colorAccent">#FF9100</color>
     <color name="colorEmptyView">#26A59A</color>
+    <color name="colorEditor">#757575</color>
+    <color name="colorMainBackground">#eeeeee</color>
+    <color name="colorPriorityNone">#000000</color>
+    <color name="colorPriorityLow">#304ffe</color>
+    <color name="colorPriorityMedium">#ffd600</color>
+    <color name="colorPriorityHigh">#f50057</color>
+    <color name="colorCompletedTask">#388e3c</color>
 </resources>

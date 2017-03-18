@@ -1,10 +1,8 @@
 package com.android.example.todoer.activity;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +45,7 @@ public class ProjectFragment extends Fragment {
 
         refreshTaskRecyclerView();
 
-        taskListAdapter = new TaskListAdapter(data);
+        /*taskListAdapter = new TaskListAdapter(data);
         taskRecyclerView.setAdapter(taskListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         taskRecyclerView.setLayoutManager(layoutManager);
@@ -55,11 +53,11 @@ public class ProjectFragment extends Fragment {
         taskListAdapter.setListener(new TaskListAdapter.Listener() {
             @Override
             public void onClick(int position) {
-                Intent intent = new Intent(getActivity(), TaskDetailActivity.class);
-                intent.putExtra(TaskDetailActivity.EXTRA_TASK_NO, position);
+                Intent intent = new Intent(getActivity(), EditorActivity.class);
+                intent.putExtra(EditorActivity.EXTRA_TASK_ID, position);
                 startActivity(intent);
             }
-        });
+        });*/
 
         return taskListLayout;
     }

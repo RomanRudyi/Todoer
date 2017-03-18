@@ -16,8 +16,19 @@
     <string name="empty_view_title_text">You`re all done for today!</string>
     <string name="empty_view_subtitle_text">Enjoy your day.</string>
 
-    <!-- TaskDetailActivity labels -->
-    <string name="detail_title">Title</string>
-    <string name="detail_project">Project</string>
-    <string name="detail_priority">Priority</string>
+    <!-- EditorActivity labels -->
+    <string name="editor_title">Title</string>
+    <string name="editor_project">Project</string>
+    <string name="editor_priority">Priority</string>
+    <string name="select_priority">Select priority</string>
+    <string name="priority_none">None</string>
+    <string name="priority_low">Low</string>
+    <string name="priority_medium">Medium</string>
+    <string name="priority_high">High</string>
+    <string name="editor_date">Due Date</string>
+
+    <string name="delete">Delete</string>
+
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
 </resources>

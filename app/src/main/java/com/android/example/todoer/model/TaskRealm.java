@@ -9,16 +9,24 @@ public class TaskRealm extends RealmObject {
 
     public static final String ID = "id";
     public static final String PROJECT_ID = "projectId";
-    public static final String TITLE = "TITLE";
+    public static final String IS_ACTIVE = "isActive";
+    public static final String TITLE = "title";
     public static final String DESCRIPTION = "description";
     public static final String PRIORITY = "priority";
     public static final String REPEATABLE = "repeatable";
     public static final String DATE= "date";
 
+    public static final int PRIORITY_NONE = 0;
+    public static final int PRIORITY_LOW = 1;
+    public static final int PRIORITY_MEDIUM = 2;
+    public static final int PRIORITY_HIGH = 3;
+
     @PrimaryKey
     private long id;
 
-    private long projectId;
+    private int projectId;
+
+    private boolean isActive;
 
     private String title;
 
@@ -28,21 +36,41 @@ public class TaskRealm extends RealmObject {
 
     private boolean repeatable;
 
-    private Date date;
+    private long date;
+
+    public TaskRealm() {
+        setId(new Date().getTime());
+    }
+
+    /*public TaskRealm(int id, String title, long date, int priority) {
+        this.id = id;
+        this.title = title;
+        this.date = date;
+        this.priority = priority;
+        isActive = true;
+    }*/
+
+    // TODO: replace after testing
+    /*public TaskRealm(int id, String title) {
+        this.id = id;
+        this.title = title;
+        this.priority = PRIORITY_NONE;
+        isActive = true;
+    }*/
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    private void setId(long id) {
         this.id = id;
     }
 
-    public long getProjectId() {
+    public int getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(long projectId) {
+    public void setProjectId(int projectId) {
         this.projectId = projectId;
     }
 
@@ -52,6 +80,14 @@ public class TaskRealm extends RealmObject {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public long getDate() {
+        return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
     }
 
     public String getDescription() {
@@ -78,11 +114,11 @@ public class TaskRealm extends RealmObject {
         this.repeatable = repeatable;
     }
 
-    public Date getDate() {
-        return date;
+    public boolean isActive() {
+        return isActive;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

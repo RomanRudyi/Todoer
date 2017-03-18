@@ -1,9 +1,9 @@
 package com.android.example.todoer.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -16,11 +16,17 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.android.example.todoer.R;
+import com.android.example.todoer.model.ProjectRealm;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String VISIBLE_FRAGMENT = "visible_fragment";
+    private Realm realm;
+    private RealmResults<ProjectRealm> projects;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +35,14 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        realm = Realm.getDefaultInstance();
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainActivity.this, EditorActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -47,20 +55,50 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Projects list example
         navigationView.setCheckedItem(R.id.nav_inbox);
-        Menu menu = navigationView.getMenu();
-        for (int i = 0; i < 3; i++) {
-            menu.add(R.id.group_projects, i, 0, "Item " + i)
-                    .setIcon(R.drawable.ic_project)
-                    .setCheckable(true);
+
+        // TODO: replace for users projects
+        /*if (realm.where(ProjectRealm.class).findAll().size() == 0) {
+            for (int i = 0; i < 3; i++) {
+                realm.beginTransaction();
+                ProjectRealm project = new ProjectRealm();
+                project.setName("Project #" + i);
+                realm.copyToRealm(project);
+                realm.commitTransaction();
+            }
         }
+
+        projects = realm.where(ProjectRealm.class).findAll();
+
+        Menu menu = navigationView.getMenu();
+        for (ProjectRealm project : projects) {
+            long projectId = project.getId();
+            String projectName = project.getName();
+            // TODO: using ListView
+           *//* menu.add(R.id.group_projects, projectId, 0, projectName)
+                    .setIcon(R.drawable.ic_project)
+                    .setCheckable(true);*//*
+        }*/
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content_frame, new InboxFragment(), VISIBLE_FRAGMENT);
         transaction.addToBackStack(null);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.commit();
+
+        // TODO: delete this placeholder after testing
+        /*realm = Realm.getDefaultInstance();
+        if (RealmController.getNextTaskId(realm) == 0) {
+            realm.beginTransaction();
+            long dateMillis = new Date().getTime();
+            Random random = new Random();
+            for (String taskTitle : TaskDummy.tasks) {
+                TaskRealm taskRealm = new TaskRealm(RealmController.getNextTaskId(realm),
+                        taskTitle, dateMillis, random.nextInt(3));
+                realm.copyToRealm(taskRealm);
+            }
+            realm.commitTransaction();
+        }*/
     }
 
     @Override
@@ -69,7 +107,7 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            finish();
         }
     }
 

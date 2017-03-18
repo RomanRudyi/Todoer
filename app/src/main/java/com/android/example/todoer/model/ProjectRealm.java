@@ -1,5 +1,7 @@
 package com.android.example.todoer.model;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -16,11 +18,15 @@ public class ProjectRealm extends RealmObject {
 
     private int color;
 
+    public ProjectRealm() {
+        setId(new Date().getTime());
+    }
+
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    private void setId(long id) {
         this.id = id;
     }
 
