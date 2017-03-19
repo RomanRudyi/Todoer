@@ -26,15 +26,13 @@ public class InboxFragment extends Fragment {
     private RelativeLayout taskListLayout;
     private RecyclerView taskRecyclerView;
     private RelativeLayout emptyView;
-    private TaskListAdapter taskListAdapter;
 
-    private Realm realm;
     private RealmResults<TaskRealm> tasks;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        realm = Realm.getDefaultInstance();
+        Realm realm = Realm.getDefaultInstance();
         // Inflate the layout for this fragment
         taskListLayout = (RelativeLayout)
                 inflater.inflate(R.layout.fragment_task_list, container, false);
@@ -47,7 +45,7 @@ public class InboxFragment extends Fragment {
 
         refreshTaskRecyclerView();
 
-        taskListAdapter = new TaskListAdapter(getActivity(), tasks);
+        TaskListAdapter taskListAdapter = new TaskListAdapter(getActivity(), tasks);
         taskRecyclerView.setAdapter(taskListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         taskRecyclerView.setLayoutManager(layoutManager);

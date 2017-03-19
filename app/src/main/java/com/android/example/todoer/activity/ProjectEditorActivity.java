@@ -61,6 +61,27 @@ public class ProjectEditorActivity extends AppCompatActivity implements ColorPic
         realm = Realm.getDefaultInstance();
 
         // Set the project's parameters
+        setupProject();
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveProject();
+            }
+        });
+
+        colorContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment colorPickerFragment = new ColorPickerFragment();
+                colorPickerFragment.show(getSupportFragmentManager(), COLOR_PICKER_TAG);
+
+            }
+        });
+    }
+
+    private void setupProject() {
         if (getIntent().hasExtra(EXTRA_PROJECT_ID)) {
             projectId = getIntent().getExtras().getLong(EXTRA_PROJECT_ID);
             project = realm.where(ProjectRealm.class).equalTo(ProjectRealm.ID, projectId).findFirst();
@@ -82,23 +103,6 @@ public class ProjectEditorActivity extends AppCompatActivity implements ColorPic
             }
             isExistedProject = false;
         }
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveProject();
-            }
-        });
-
-        colorContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment colorPickerFragment = new ColorPickerFragment();
-                colorPickerFragment.show(getSupportFragmentManager(), COLOR_PICKER_TAG);
-
-            }
-        });
     }
 
     private void saveProject() {
@@ -181,8 +185,9 @@ public class ProjectEditorActivity extends AppCompatActivity implements ColorPic
             if (isExistedProject) {
                 realm.beginTransaction();
                 project.deleteFromRealm();
-                realm.where(TaskRealm.class).equalTo(TaskRealm.PROJECT_ID, projectId).findAll()
-                        .deleteAllFromRealm();
+                RealmResults<TaskRealm> tasksToDelete = realm.where(TaskRealm.class)
+                        .equalTo(TaskRealm.PROJECT_ID, projectId).findAll();
+                tasksToDelete.deleteAllFromRealm();
                 realm.commitTransaction();
                 Toast.makeText(ProjectEditorActivity.this,
                         "Project deleted",

@@ -30,11 +30,8 @@ public class ProjectFragment extends Fragment {
     private RelativeLayout taskListLayout;
     private RecyclerView taskRecyclerView;
     private RelativeLayout emptyView;
-    private TaskListAdapter taskListAdapter;
 
-    private Realm realm;
     private RealmResults<TaskRealm> tasks;
-    private long projectId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,9 +42,9 @@ public class ProjectFragment extends Fragment {
         taskRecyclerView = (RecyclerView) taskListLayout.findViewById(R.id.task_recycler_view);
         emptyView = (RelativeLayout) taskListLayout.findViewById(R.id.empty_view);
 
-        realm = Realm.getDefaultInstance();
+        Realm realm = Realm.getDefaultInstance();
 
-        projectId = getArguments().getLong(PROJECT_ID);
+        long projectId = getArguments().getLong(PROJECT_ID);
 
         tasks = realm.where(TaskRealm.class)
                 .equalTo(TaskRealm.PROJECT_ID, projectId)
@@ -57,7 +54,7 @@ public class ProjectFragment extends Fragment {
 
         refreshTaskRecyclerView();
 
-        taskListAdapter = new TaskListAdapter(getActivity(), tasks);
+        TaskListAdapter taskListAdapter = new TaskListAdapter(getActivity(), tasks);
         taskRecyclerView.setAdapter(taskListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         taskRecyclerView.setLayoutManager(layoutManager);

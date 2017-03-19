@@ -21,9 +21,7 @@ import io.realm.RealmResults;
 
 public class ProjectListFragment extends Fragment {
 
-    private RecyclerView projectsRecyclerView;
     private RealmResults<ProjectRealm> projects;
-    private Realm realm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,9 +29,9 @@ public class ProjectListFragment extends Fragment {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_project_list, container, false);
 
-        projectsRecyclerView = (RecyclerView) layout.findViewById(R.id.projects_list_view);
+        RecyclerView projectsRecyclerView = (RecyclerView) layout.findViewById(R.id.projects_list_view);
 
-        realm = Realm.getDefaultInstance();
+        Realm realm = Realm.getDefaultInstance();
         projects = realm.where(ProjectRealm.class).findAllSorted(ProjectRealm.NAME);
 
         ProjectListAdapter projectListAdapter = new ProjectListAdapter(getActivity(), projects);

@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -38,28 +39,23 @@ public class TaskEditorActivity extends AppCompatActivity {
     public static String EXTRA_TASK_ID = "taskId";
 
     private EditText titleEditText;
-    private String title;
 
     public static final String DATE_PICKER_TAG = "datePicker";
     public static final DateFormat dateFormat =
             new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
-    private LinearLayout dateContainer;
     private TextView dateTextView;
     public static Calendar calendar = Calendar.getInstance();
 
     public static final String PRIORITY_PICKER_TAG = "priorityPicker";
-    private LinearLayout priorityContainer;
     private TextView priorityTextView;
     private static int priority;
 
     public static final String PROJECT_PICKER_TAG = "projectPicker";
-    private LinearLayout projectContainer;
     private TextView projectTextView;
     private static long projectId;
 
     private Realm realm;
     private TaskRealm task;
-    private long taskId;
     private boolean isExistedTask = false;
 
     @Override
@@ -77,6 +73,7 @@ public class TaskEditorActivity extends AppCompatActivity {
         priorityTextView = (TextView) findViewById(R.id.editor_priority);
         projectTextView = (TextView) findViewById(R.id.editor_project);
 
+        // Set the task's parameters
         setupTask();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -87,7 +84,7 @@ public class TaskEditorActivity extends AppCompatActivity {
             }
         });
 
-        dateContainer = (LinearLayout) findViewById(R.id.date_container);
+        LinearLayout dateContainer = (LinearLayout) findViewById(R.id.date_container);
         dateContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,7 +93,7 @@ public class TaskEditorActivity extends AppCompatActivity {
             }
         });
 
-        priorityContainer = (LinearLayout) findViewById(R.id.priority_container);
+        LinearLayout priorityContainer = (LinearLayout) findViewById(R.id.priority_container);
         priorityContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,7 +103,7 @@ public class TaskEditorActivity extends AppCompatActivity {
             }
         });
 
-        projectContainer = (LinearLayout) findViewById(R.id.project_container);
+        LinearLayout projectContainer = (LinearLayout) findViewById(R.id.project_container);
         projectContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,9 +115,8 @@ public class TaskEditorActivity extends AppCompatActivity {
     }
 
     private void setupTask() {
-        // Set the task's parameters
         if (getIntent().hasExtra(EXTRA_TASK_ID)) {
-            taskId = getIntent().getExtras().getLong(EXTRA_TASK_ID);
+            long taskId = getIntent().getExtras().getLong(EXTRA_TASK_ID);
             task = realm.where(TaskRealm.class).equalTo(TaskRealm.ID, taskId).findFirst();
 
             titleEditText.setText(task.getTitle());
@@ -132,7 +128,7 @@ public class TaskEditorActivity extends AppCompatActivity {
             setupPriority();
 
             projectId = task.getProjectId();
-            setupProject(projectId, projectTextView, getString(R.string.drawer_inbox));
+            setupProjectContainer(projectId, projectTextView, getString(R.string.drawer_inbox));
 
             isExistedTask = true;
         } else {
@@ -146,7 +142,7 @@ public class TaskEditorActivity extends AppCompatActivity {
         }
     }
 
-    private static void setupProject(long projectId, TextView projectTextView, String inboxName) {
+    private static void setupProjectContainer(long projectId, TextView projectTextView, String inboxName) {
         if (projectId == ProjectRealm.INBOX_ID) {
             projectTextView.setText(inboxName);
         } else {
@@ -187,7 +183,7 @@ public class TaskEditorActivity extends AppCompatActivity {
     }
 
     private void saveTask() {
-        title = titleEditText.getText().toString().trim();
+        String title = titleEditText.getText().toString().trim();
 
         if (title.isEmpty()) {
             Toast.makeText(this, getString(R.string.error_empty_task_title), Toast.LENGTH_SHORT).show();
@@ -236,7 +232,7 @@ public class TaskEditorActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_delete) {
             if (isExistedTask) {
@@ -260,7 +256,7 @@ public class TaskEditorActivity extends AppCompatActivity {
         private TextView dateTextView;
 
         @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
+        public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
             dateTextView = (TextView) getActivity().findViewById(R.id.editor_date);
 
             // Use the current date as the default date in the picker
@@ -286,7 +282,7 @@ public class TaskEditorActivity extends AppCompatActivity {
         private RadioGroup priorityRadioGroup;
 
         @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
+        public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
             priorityTextView = (TextView) getActivity().findViewById(R.id.editor_priority);
 
             // Create a new instance of PriorityPickerDialog
@@ -364,7 +360,7 @@ public class TaskEditorActivity extends AppCompatActivity {
         private int checkedItemPosition = 0;
 
         @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
+        public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
             projectTextView = (TextView) getActivity().findViewById(R.id.editor_project);
 
             realm = Realm.getDefaultInstance();
@@ -397,7 +393,7 @@ public class TaskEditorActivity extends AppCompatActivity {
                             } else {
                                 projectId = projects.get(checkedItemPosition - 1).getId();
                             }
-                            setupProject(projectId, projectTextView, getString(R.string.drawer_inbox));
+                            setupProjectContainer(projectId, projectTextView, getString(R.string.drawer_inbox));
                         }
                     })
                     .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
