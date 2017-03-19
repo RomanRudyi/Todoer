@@ -11,9 +11,13 @@ public class ProjectRealm extends RealmObject {
     public static final String NAME = "name";
     public static final String COLOR = "color";
 
+    public static final long INBOX_ID = 0;
+
     public static final int COLOR_RED = 0;
     public static final int COLOR_GREEN = 1;
     public static final int COLOR_BLUE = 2;
+    public static final int COLOR_PURPLE = 3;
+    public static final int COLOR_ORANGE = 4;
 
     @PrimaryKey
     private long id;

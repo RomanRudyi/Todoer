@@ -24,7 +24,7 @@ public class TaskRealm extends RealmObject {
     @PrimaryKey
     private long id;
 
-    private int projectId;
+    private long projectId;
 
     private boolean isActive;
 
@@ -42,22 +42,6 @@ public class TaskRealm extends RealmObject {
         setId(new Date().getTime());
     }
 
-    /*public TaskRealm(int id, String title, long date, int priority) {
-        this.id = id;
-        this.title = title;
-        this.date = date;
-        this.priority = priority;
-        isActive = true;
-    }*/
-
-    // TODO: replace after testing
-    /*public TaskRealm(int id, String title) {
-        this.id = id;
-        this.title = title;
-        this.priority = PRIORITY_NONE;
-        isActive = true;
-    }*/
-
     public long getId() {
         return id;
     }
@@ -66,11 +50,11 @@ public class TaskRealm extends RealmObject {
         this.id = id;
     }
 
-    public int getProjectId() {
+    public long getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(int projectId) {
+    public void setProjectId(long projectId) {
         this.projectId = projectId;
     }
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.android.example.todoer.activity.EditorActivity">
+    tools:context="com.android.example.todoer.activity.ProjectEditorActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -29,7 +29,7 @@
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/title_text_input_layout"
+                android:id="@+id/project_name_text_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/toolbar"
@@ -39,12 +39,12 @@
                 android:focusableInTouchMode="true">
 
                 <EditText
-                    android:id="@+id/title_edit_text"
+                    android:id="@+id/project_name_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
 
-                    android:hint="@string/editor_title" />
+                    android:hint="@string/editor_project_name" />
             </android.support.design.widget.TextInputLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -54,8 +54,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.android.example.todoer.activity.EditorActivity"
-        tools:showIn="@layout/activity_editor">
+        tools:context="com.android.example.todoer.activity.ProjectEditorActivity"
+        tools:showIn="@layout/activity_project_editor">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -63,79 +63,26 @@
             android:orientation="vertical"
             android:layout_marginTop="16dp">
 
-            <!-- Due Date -->
+            <!-- Color -->
             <LinearLayout
-                android:id="@+id/date_container"
+                android:id="@+id/color_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_calendar"
+                    android:id="@+id/editor_project_color_image_view"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    tools:background="@drawable/circle_color_red"
                     android:layout_margin="24dp"/>
 
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/editor_date"
-                        android:textAppearance="@android:style/TextAppearance.Medium"
-                        android:layout_marginTop="16dp"
-                        android:textColor="@color/colorEditor"/>
-
-                    <TextView
-                        android:id="@+id/editor_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        tools:text="March 3"
-                        android:textAppearance="@android:style/TextAppearance.Small"
-                        android:textColor="@color/colorEditor"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- Priority -->
-            <LinearLayout
-                android:id="@+id/priority_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_priority"
-                    android:layout_margin="24dp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/editor_priority"
-                        android:textAppearance="@android:style/TextAppearance.Medium"
-                        android:layout_marginTop="16dp"
-                        android:textColor="@color/colorEditor"/>
-
-                    <TextView
-                        android:id="@+id/editor_priority"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        tools:text="High"
-                        tools:textColor="@color/colorPriorityLow"
-                        android:textAppearance="@android:style/TextAppearance.Small"/>
-
-                </LinearLayout>
+                    android:text="@string/editor_project_color"
+                    android:textAppearance="@android:style/TextAppearance.Medium"
+                    android:layout_gravity="center_vertical"/>
 
             </LinearLayout>
 

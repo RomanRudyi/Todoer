@@ -1,17 +1,24 @@
 package com.android.example.todoer.activity;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.android.example.todoer.R;
 import com.android.example.todoer.adapter.TaskListAdapter;
+import com.android.example.todoer.model.OnRecyclerViewItemClickListener;
+import com.android.example.todoer.model.TaskRealm;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,9 +30,11 @@ public class ProjectFragment extends Fragment {
     private RelativeLayout taskListLayout;
     private RecyclerView taskRecyclerView;
     private RelativeLayout emptyView;
-    private String[] data;
     private TaskListAdapter taskListAdapter;
-    private long id;
+
+    private Realm realm;
+    private RealmResults<TaskRealm> tasks;
+    private long projectId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,34 +45,39 @@ public class ProjectFragment extends Fragment {
         taskRecyclerView = (RecyclerView) taskListLayout.findViewById(R.id.task_recycler_view);
         emptyView = (RelativeLayout) taskListLayout.findViewById(R.id.empty_view);
 
-        id = getArguments().getLong(PROJECT_ID);
+        realm = Realm.getDefaultInstance();
 
-        Toast.makeText(getActivity(), "id = " + id, Toast.LENGTH_SHORT).show();
+        projectId = getArguments().getLong(PROJECT_ID);
 
-        // TODO: replace dummy data
-        data = null;
+        tasks = realm.where(TaskRealm.class)
+                .equalTo(TaskRealm.PROJECT_ID, projectId)
+                .findAllSorted(
+                        new String[] {TaskRealm.IS_ACTIVE, TaskRealm.PRIORITY, TaskRealm.DATE, TaskRealm.TITLE},
+                        new Sort[] {Sort.DESCENDING, Sort.DESCENDING, Sort.ASCENDING, Sort.ASCENDING});
 
         refreshTaskRecyclerView();
 
-        /*taskListAdapter = new TaskListAdapter(data);
+        taskListAdapter = new TaskListAdapter(getActivity(), tasks);
         taskRecyclerView.setAdapter(taskListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         taskRecyclerView.setLayoutManager(layoutManager);
 
-        taskListAdapter.setListener(new TaskListAdapter.Listener() {
+        taskListAdapter.setListener(new OnRecyclerViewItemClickListener() {
             @Override
             public void onClick(int position) {
-                Intent intent = new Intent(getActivity(), EditorActivity.class);
-                intent.putExtra(EditorActivity.EXTRA_TASK_ID, position);
+                Intent intent = new Intent(getActivity(), TaskEditorActivity.class);
+                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                long taskId = tasks.get(position).getId();
+                intent.putExtra(TaskEditorActivity.EXTRA_TASK_ID, taskId);
                 startActivity(intent);
             }
-        });*/
+        });
 
         return taskListLayout;
     }
 
     private void refreshTaskRecyclerView() {
-        if (data == null) {
+        if (tasks == null || tasks.size() == 0) {
             emptyView.setVisibility(View.VISIBLE);
             taskRecyclerView.setVisibility(View.GONE);
             taskListLayout.setBackgroundColor(getResources().getColor(R.color.colorEmptyView));

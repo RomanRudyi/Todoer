@@ -24,9 +24,10 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String VISIBLE_FRAGMENT = "visible_fragment";
+    public static final String VISIBLE_FRAGMENT = "visible_fragment";
     private Realm realm;
     private RealmResults<ProjectRealm> projects;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,8 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, EditorActivity.class);
+                Intent intent = new Intent(MainActivity.this, TaskEditorActivity.class);
+                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
             }
         });
@@ -52,22 +54,10 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         navigationView.setCheckedItem(R.id.nav_inbox);
-
-        // TODO: replace for users projects
-        if (realm.where(ProjectRealm.class).findAll().size() == 0) {
-            for (int i = 0; i < 3; i++) {
-                realm.beginTransaction();
-                ProjectRealm project = new ProjectRealm();
-                project.setName("Project #" + i);
-                project.setColor(i);
-                realm.copyToRealm(project);
-                realm.commitTransaction();
-            }
-        }
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content_frame, new InboxFragment(), VISIBLE_FRAGMENT);
@@ -114,7 +104,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        Fragment fragment;
+        Fragment fragment = new InboxFragment();
 
         if (id == R.id.nav_inbox) {
             fragment = new InboxFragment();
@@ -123,13 +113,10 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_projects) {
             fragment = new ProjectListFragment();
         } else if (id ==  R.id.nav_add_list) {
-            fragment = new InboxFragment();
-        } else {
-            fragment = new ProjectFragment();
-            /** Pass the project id to {@link ProjectFragment} */
-            Bundle bundle = new Bundle();
-            bundle.putLong(ProjectFragment.PROJECT_ID, id);
-            fragment.setArguments(bundle);
+            Intent intent = new Intent(MainActivity.this, ProjectEditorActivity.class);
+            intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
+            return true;
         }
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

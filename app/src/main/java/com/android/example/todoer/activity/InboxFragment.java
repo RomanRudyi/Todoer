@@ -56,8 +56,9 @@ public class InboxFragment extends Fragment {
             @Override
             public void onClick(int position) {
                 long taskId = tasks.get(position).getId();
-                Intent intent = new Intent(getActivity(), EditorActivity.class);
-                intent.putExtra(EditorActivity.EXTRA_TASK_ID, taskId);
+                Intent intent = new Intent(getActivity(), TaskEditorActivity.class);
+                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                intent.putExtra(TaskEditorActivity.EXTRA_TASK_ID, taskId);
                 startActivity(intent);
             }
         });

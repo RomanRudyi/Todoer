@@ -11,7 +11,9 @@
     <color name="colorPriorityMedium">#ffd600</color>
     <color name="colorPriorityHigh">#f50057</color>
     <color name="colorCompletedTask">#388e3c</color>
-    <color name="colorProjectRed">#f44336</color>
-    <color name="colorProjectGreen">#64dd17</color>
-    <color name="colorProjectBlue">#304ffe</color>
+    <color name="colorProjectRed">#ff5252</color>
+    <color name="colorProjectGreen">#b2ff59</color>
+    <color name="colorProjectBlue">#448aff</color>
+    <color name="colorProjectPurple">#e040fb</color>
+    <color name="colorProjectOrange">#ffab40</color>
 </resources>

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.android.example.todoer.R;
 import com.android.example.todoer.model.OnRecyclerViewItemClickListener;
+import com.android.example.todoer.model.ProjectRealm;
 import com.android.example.todoer.model.TaskRealm;
 
 import java.text.DateFormat;
@@ -55,11 +56,14 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
         DateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
         String dateText = dateFormat.format(task.getDate());
         final boolean isActive = task.isActive();
+        final long projectId = task.getProjectId();
 
         setupTaskTitleColor(holder, isActive);
 
         holder.taskTitleTextView.setText(titleText);
         holder.taskDateTextView.setText(dateText);
+
+        setupTaskProjectColor(holder, projectId);
 
         setupCheckBox(holder.taskCheckBox, position);
         holder.taskCheckBox.setChecked(!isActive);
@@ -71,12 +75,14 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
                     task.setActive(false);
                     realm.commitTransaction();
                     setupTaskTitleColor(holder, isActive);
+                    setupTaskProjectColor(holder, projectId);
                     notifyDataSetChanged();
                 } else {
                     realm.beginTransaction();
                     task.setActive(true);
                     realm.commitTransaction();
                     setupTaskTitleColor(holder, isActive);
+                    setupTaskProjectColor(holder, projectId);
                     notifyDataSetChanged();
                 }
             }
@@ -93,6 +99,97 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
 
         // Applying the animation
         setAnimation(holder.itemView, position);
+    }
+
+    @Override
+    public int getItemCount() {
+        return tasks.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        CardView cardView;
+        TextView taskTitleTextView;
+        TextView taskDateTextView;
+        ImageView taskProjectImageView;
+        CheckBox taskCheckBox;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            cardView = (CardView) itemView.findViewById(R.id.task_card_view);
+            taskTitleTextView = (TextView) itemView.findViewById(R.id.item_title);
+            taskDateTextView = (TextView) itemView.findViewById(R.id.item_date);
+            taskProjectImageView = (ImageView) itemView.findViewById(R.id.project_color_image_view);
+            taskCheckBox = (CheckBox) itemView.findViewById(R.id.item_check_box);
+        }
+    }
+
+    public void setListener(OnRecyclerViewItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    /**
+     * This helper method sets color of checkbox
+     * @param checkBox
+     * @param position
+     */
+    private void setupCheckBox(CheckBox checkBox, int position) {
+        int priority = tasks.get(position).getPriority();
+        int colorCheckBox;
+
+        switch (priority) {
+            case TaskRealm.PRIORITY_LOW:
+                colorCheckBox = context.getResources().getColor(R.color.colorPriorityLow);
+                break;
+            case TaskRealm.PRIORITY_MEDIUM:
+                colorCheckBox = context.getResources().getColor(R.color.colorPriorityMedium);
+                break;
+            case TaskRealm.PRIORITY_HIGH:
+                colorCheckBox = context.getResources().getColor(R.color.colorPriorityHigh);
+                break;
+            default:
+                colorCheckBox = context.getResources().getColor(R.color.colorPriorityNone);
+        }
+
+        int states[][] = {{android.R.attr.state_checked}, {}};
+        int colors[] = {context.getResources().getColor(R.color.colorCompletedTask), colorCheckBox};
+        CompoundButtonCompat.setButtonTintList(checkBox, new ColorStateList(states, colors));
+    }
+
+    /**
+     * This is the helper method to setup task project color
+     * @param holder
+     * @param projectId
+     */
+    private void setupTaskProjectColor(ViewHolder holder, long projectId) {
+        if (projectId == ProjectRealm.INBOX_ID) {
+            holder.taskProjectImageView.setBackgroundColor(context.getResources()
+                    .getColor(android.R.color.white));
+            return;
+        }
+        int projectColor = realm.where(ProjectRealm.class)
+                .equalTo(ProjectRealm.ID, projectId).findFirst().getColor();
+        switch (projectColor) {
+            case ProjectRealm.COLOR_RED:
+                holder.taskProjectImageView.setBackgroundColor(context.getResources()
+                        .getColor(R.color.colorProjectRed));
+                break;
+            case ProjectRealm.COLOR_GREEN:
+                holder.taskProjectImageView.setBackgroundColor(context.getResources()
+                        .getColor(R.color.colorProjectGreen));
+                break;
+            case ProjectRealm.COLOR_BLUE:
+                holder.taskProjectImageView.setBackgroundColor(context.getResources()
+                        .getColor(R.color.colorProjectBlue));
+                break;
+            case ProjectRealm.COLOR_PURPLE:
+                holder.taskProjectImageView.setBackgroundColor(context.getResources()
+                        .getColor(R.color.colorProjectPurple));
+                break;
+            case ProjectRealm.COLOR_ORANGE:
+                holder.taskProjectImageView.setBackgroundColor(context.getResources()
+                        .getColor(R.color.colorProjectOrange));
+                break;
+        }
     }
 
     /**
@@ -127,54 +224,5 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
             viewToAnimate.setAnimation(animation);
             lastPosition = position;
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return tasks.size();
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        CardView cardView;
-        TextView taskTitleTextView;
-        TextView taskDateTextView;
-        ImageView taskProjectImageView;
-        CheckBox taskCheckBox;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            cardView = (CardView) itemView.findViewById(R.id.task_card_view);
-            taskTitleTextView = (TextView) itemView.findViewById(R.id.item_title);
-            taskDateTextView = (TextView) itemView.findViewById(R.id.item_date);
-            taskProjectImageView = (ImageView) itemView.findViewById(R.id.project_color_image_view);
-            taskCheckBox = (CheckBox) itemView.findViewById(R.id.item_check_box);
-        }
-    }
-
-    public void setListener(OnRecyclerViewItemClickListener listener) {
-        this.listener = listener;
-    }
-
-    private void setupCheckBox(CheckBox checkBox, int position) {
-        int priority = tasks.get(position).getPriority();
-        int colorCheckBox;
-
-        switch (priority) {
-            case TaskRealm.PRIORITY_LOW:
-                colorCheckBox = context.getResources().getColor(R.color.colorPriorityLow);
-                break;
-            case TaskRealm.PRIORITY_MEDIUM:
-                colorCheckBox = context.getResources().getColor(R.color.colorPriorityMedium);
-                break;
-            case TaskRealm.PRIORITY_HIGH:
-                colorCheckBox = context.getResources().getColor(R.color.colorPriorityHigh);
-                break;
-            default:
-                colorCheckBox = context.getResources().getColor(R.color.colorPriorityNone);
-        }
-
-        int states[][] = {{android.R.attr.state_checked}, {}};
-        int colors[] = {context.getResources().getColor(R.color.colorCompletedTask), colorCheckBox};
-        CompoundButtonCompat.setButtonTintList(checkBox, new ColorStateList(states, colors));
     }
 }
