@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,10 +46,11 @@ public class InboxFragment extends Fragment {
 
         refreshTaskRecyclerView();
 
-        TaskListAdapter taskListAdapter = new TaskListAdapter(getActivity(), tasks);
-        taskRecyclerView.setAdapter(taskListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         taskRecyclerView.setLayoutManager(layoutManager);
+        TaskListAdapter taskListAdapter = new TaskListAdapter(getActivity(), tasks);
+        taskRecyclerView.setAdapter(taskListAdapter);
+        setupItemTouchHelper();
 
         taskListAdapter.setListener(new OnRecyclerViewItemClickListener() {
             @Override
@@ -79,5 +81,28 @@ public class InboxFragment extends Fragment {
             emptyView.setVisibility(View.GONE);
             taskRecyclerView.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void setupItemTouchHelper() {
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView,
+                                  RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                int swipedPosition = viewHolder.getAdapterPosition();
+                TaskListAdapter adapter = (TaskListAdapter) taskRecyclerView.getAdapter();
+                adapter.setAsCompleted(swipedPosition);
+            }
+
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(taskRecyclerView);
     }
 }

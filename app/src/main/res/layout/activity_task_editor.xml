@@ -42,7 +42,8 @@ tools:context="com.android.example.todoer.activity.TaskEditorActivity">
                 android:id="@+id/title_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:maxLines="1"
+                android:inputType="textCapSentences"
 
                 android:hint="@string/editor_title" />
         </android.support.design.widget.TextInputLayout>

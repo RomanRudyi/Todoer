@@ -10,14 +10,14 @@
     <string name="drawer_inbox">Inbox</string>
     <string name="drawer_calendar">Calendar</string>
     <string name="drawer_projects">Projects</string>
-    <string name="drawer_add_list">Add list</string>
+    <string name="drawer_add_list">Add project</string>
 
     <!-- Empty view labels -->
     <string name="empty_view_title_text">You`re all done for today!</string>
     <string name="empty_view_subtitle_text">Enjoy your day.</string>
 
     <!-- TaskEditorActivity labels -->
-    <string name="editor_title">Title</string>
+    <string name="editor_title">Task</string>
     <string name="editor_project">Project</string>
     <string name="editor_priority">Priority</string>
     <string name="select_priority">Select priority</string>
@@ -33,6 +33,11 @@
     <string name="editor_project_color">Color</string>
     <string name="error_empty_project_name">Project name cannot be empty!</string>
     <string name="error_duplicate_project_name">The project with the same name already exists!</string>
+
+    <!-- DateUtility labels -->
+    <string name="yesterday">Yesterday</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
 
     <string name="delete">Delete</string>
 

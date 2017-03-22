@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +19,7 @@ import com.android.example.todoer.R;
 import com.android.example.todoer.model.OnRecyclerViewItemClickListener;
 import com.android.example.todoer.model.ProjectRealm;
 import com.android.example.todoer.model.TaskRealm;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import com.android.example.todoer.utility.DateUtility;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -52,16 +50,16 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final TaskRealm task = tasks.get(position);
-        String titleText = task.getTitle();
-        DateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
-        String dateText = dateFormat.format(task.getDate());
-        final boolean isActive = task.isActive();
+
         final long projectId = task.getProjectId();
+        final boolean isActive = task.isActive();
 
+        String titleText = task.getTitle();
         setupTaskTitleColor(holder, isActive);
-
         holder.taskTitleTextView.setText(titleText);
-        holder.taskDateTextView.setText(dateText);
+
+        final long dateInMillis = task.getDate();
+        setupTaskDate(holder, dateInMillis, isActive);
 
         setupTaskProjectColor(holder, projectId);
 
@@ -76,6 +74,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
                     realm.commitTransaction();
                     setupTaskTitleColor(holder, isActive);
                     setupTaskProjectColor(holder, projectId);
+                    setupTaskDate(holder, dateInMillis, isActive);
                     notifyDataSetChanged();
                 } else {
                     realm.beginTransaction();
@@ -83,6 +82,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
                     realm.commitTransaction();
                     setupTaskTitleColor(holder, isActive);
                     setupTaskProjectColor(holder, projectId);
+                    setupTaskDate(holder, dateInMillis, isActive);
                     notifyDataSetChanged();
                 }
             }
@@ -125,6 +125,45 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
 
     public void setListener(OnRecyclerViewItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setAsCompleted(int position) {
+        if (position < 0 || position >= getItemCount()) {
+            return;
+        }
+        TaskRealm swipedTask = tasks.get(position);
+        if (swipedTask.isActive()) {
+            realm.beginTransaction();
+            swipedTask.setActive(false);
+            realm.commitTransaction();
+            notifyDataSetChanged();
+        } else {
+            notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * This helper method sets the color of date
+     * @param holder
+     * @param dateInMillis
+     * @param isActive
+     */
+    private void setupTaskDate(ViewHolder holder, long dateInMillis, boolean isActive) {
+        String dateText = DateUtility.getDayName(context, dateInMillis);
+        holder.taskDateTextView.setText(dateText);
+        Time t = new Time();
+        t.setToNow();
+        int julianDay = Time.getJulianDay(dateInMillis, t.gmtoff);
+        int currentJulianDay = Time.getJulianDay(System.currentTimeMillis(), t.gmtoff);
+        if (julianDay < currentJulianDay && isActive) {
+            int outdatedColor =
+                    context.getResources().getColor(R.color.colorProjectRed);
+            holder.taskDateTextView.setTextColor(outdatedColor);
+        } else {
+            int activeDateColor =
+                    context.getResources().getColor(android.R.color.secondary_text_dark);
+            holder.taskDateTextView.setTextColor(activeDateColor);
+        }
     }
 
     /**
@@ -204,7 +243,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
             holder.taskTitleTextView.setTextColor(activeColor);
         } else {
             int completedColor =
-                    context.getResources().getColor(R.color.colorEditor);
+                    context.getResources().getColor(android.R.color.secondary_text_dark);
             holder.taskTitleTextView.setTextColor(completedColor);
         }
     }

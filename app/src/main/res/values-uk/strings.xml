@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Налаштування</string>
+
+    <!-- Drawer labels -->
+    <string name="drawer_inbox">Вхідні</string>
+    <string name="drawer_calendar">Календар</string>
+    <string name="drawer_projects">Списки</string>
+    <string name="drawer_add_list">Додати список</string>
+
+    <!-- Empty view labels -->
+    <string name="empty_view_title_text">Ви все зробили на сьогодні!</string>
+    <string name="empty_view_subtitle_text">Насолоджуйтесь.</string>
+
+    <!-- TaskEditorActivity labels -->
+    <string name="editor_title">Завдання</string>
+    <string name="editor_project">Список</string>
+    <string name="editor_priority">Пріоритет</string>
+    <string name="select_priority">Обрати пріоритет</string>
+    <string name="priority_none">Немає</string>
+    <string name="priority_low">Низький</string>
+    <string name="priority_medium">Середній</string>
+    <string name="priority_high">Високи</string>
+    <string name="editor_date">Дата</string>
+    <string name="error_empty_task_title">Назва завдання не може бути порожня!</string>
+
+    <!-- ProjectEditorActivity labels -->
+    <string name="editor_project_name">Список</string>
+    <string name="editor_project_color">Колір</string>
+    <string name="error_empty_project_name">Назва списку не може бути порожня!</string>
+    <string name="error_duplicate_project_name">Список з такою назвою вже існує!</string>
+
+    <!-- DateUtility labels -->
+    <string name="yesterday">Вчора</string>
+    <string name="today">Сьогодні</string>
+    <string name="tomorrow">Завтра</string>
+
+    <string name="delete">Видалити</string>
+
+    <string name="ok">Гаразд</string>
+    <string name="cancel">Скасувати</string>
+</resources>
