@@ -17,7 +17,7 @@ import com.android.example.todoer.model.ProjectRealm;
 public class ColorPickerFragment extends DialogFragment {
 
     public interface ColorPickerDialogListener {
-        void onDialogPositiveClick(DialogFragment dialog);
+        void onColorPickerDialogPositiveClick(DialogFragment dialog);
     }
 
     private RadioGroup colorRadioGroup;
@@ -44,7 +44,7 @@ public class ColorPickerFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         colorChanged(colorRadioGroup.getCheckedRadioButtonId());
-                        projectEditorActivity.onDialogPositiveClick(ColorPickerFragment.this);
+                        projectEditorActivity.onColorPickerDialogPositiveClick(ColorPickerFragment.this);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

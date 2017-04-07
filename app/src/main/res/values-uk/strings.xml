@@ -10,7 +10,7 @@
 
     <!-- Empty view labels -->
     <string name="empty_view_title_text">Ви все зробили на сьогодні!</string>
-    <string name="empty_view_subtitle_text">Насолоджуйтесь.</string>
+    <string name="empty_view_subtitle_text">Насолоджуйтесь своїм днем.</string>
 
     <!-- TaskEditorActivity labels -->
     <string name="editor_title">Завдання</string>
@@ -20,7 +20,7 @@
     <string name="priority_none">Немає</string>
     <string name="priority_low">Низький</string>
     <string name="priority_medium">Середній</string>
-    <string name="priority_high">Високи</string>
+    <string name="priority_high">Високий</string>
     <string name="editor_date">Дата</string>
     <string name="error_empty_task_title">Назва завдання не може бути порожня!</string>
 

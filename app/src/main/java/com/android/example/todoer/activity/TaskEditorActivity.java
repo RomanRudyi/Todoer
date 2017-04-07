@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.example.todoer.R;
+import com.android.example.todoer.dialog.ProjectPickerFragment;
 import com.android.example.todoer.model.ProjectRealm;
 import com.android.example.todoer.model.TaskRealm;
 
@@ -34,7 +35,7 @@ import java.util.Locale;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class TaskEditorActivity extends AppCompatActivity {
+public class TaskEditorActivity extends AppCompatActivity implements ProjectPickerFragment.ProjectPickerDialogListener{
 
     public static String EXTRA_TASK_ID = "taskId";
 
@@ -97,7 +98,10 @@ public class TaskEditorActivity extends AppCompatActivity {
         priorityContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Bundle bundle = new Bundle();
+                //bundle.putLong(ProjectPickerFragment.PROJECT_ID, projectId);
                 DialogFragment priorityPickerFragment = new PriorityPickerFragment();
+                //priorityPickerFragment.setArguments(bundle);
                 priorityPickerFragment.show(getSupportFragmentManager(), PRIORITY_PICKER_TAG);
 
             }
@@ -135,7 +139,7 @@ public class TaskEditorActivity extends AppCompatActivity {
             calendar = Calendar.getInstance();
             dateTextView.setText(dateFormat.format(calendar.getTimeInMillis()));
             priorityTextView.setText(getString(R.string.priority_none));
-            priorityTextView.setTextColor(getColor(R.color.colorPriorityNone));
+            priorityTextView.setTextColor(getResources().getColor(R.color.colorPriorityNone));
             priority = TaskRealm.PRIORITY_NONE;
             projectId = ProjectRealm.INBOX_ID;
             projectTextView.setText(getString(R.string.drawer_inbox));
@@ -158,23 +162,23 @@ public class TaskEditorActivity extends AppCompatActivity {
 
         switch (priority) {
             case TaskRealm.PRIORITY_NONE:
-                priorityColor = getColor(R.color.colorPriorityNone);
+                priorityColor = getResources().getColor(R.color.colorPriorityNone);
                 priorityText = getString(R.string.priority_none);
                 break;
             case TaskRealm.PRIORITY_LOW:
-                priorityColor = getColor(R.color.colorPriorityLow);
+                priorityColor = getResources().getColor(R.color.colorPriorityLow);
                 priorityText = getString(R.string.priority_low);
                 break;
             case TaskRealm.PRIORITY_MEDIUM:
-                priorityColor = getColor(R.color.colorPriorityMedium);
+                priorityColor = getResources().getColor(R.color.colorPriorityMedium);
                 priorityText = getString(R.string.priority_medium);
                 break;
             case TaskRealm.PRIORITY_HIGH:
-                priorityColor = getColor(R.color.colorPriorityHigh);
+                priorityColor = getResources().getColor(R.color.colorPriorityHigh);
                 priorityText = getString(R.string.priority_high);
                 break;
             default:
-                priorityColor = getColor(R.color.colorPriorityNone);
+                priorityColor = getResources().getColor(R.color.colorPriorityNone);
                 priorityText = getString(R.string.priority_none);
         }
 
@@ -248,6 +252,11 @@ public class TaskEditorActivity extends AppCompatActivity {
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onProjectPickerDialogPositiveClick(DialogFragment dialog, long projectId) {
+        setupProjectContainer(projectId, projectTextView, getString(R.string.drawer_inbox));
     }
 
     public static class DatePickerFragment extends DialogFragment
@@ -367,7 +376,6 @@ public class TaskEditorActivity extends AppCompatActivity {
 
             projects = realm.where(ProjectRealm.class).findAllSorted(ProjectRealm.NAME);
 
-            //TODO: fix this - user can't create two projects with the same names
             String[] projectNames = new String[projects.size() + 1];
             projectNames[0] = getActivity().getString(R.string.drawer_inbox);
             for (int i = 1; i < projectNames.length; i++) {

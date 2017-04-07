@@ -201,7 +201,7 @@ public class ProjectEditorActivity extends AppCompatActivity implements ColorPic
     }
 
     @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
+    public void onColorPickerDialogPositiveClick(DialogFragment dialog) {
         // User touched the dialog's positive button
         Drawable drawable = getChangedDrawable(this, projectColor);
         if (drawable != null) {
