@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.example.todoer.R;
-import com.android.example.todoer.model.OnRecyclerViewItemClickListener;
+import com.android.example.todoer.utility.OnRecyclerViewItemClickListener;
 import com.android.example.todoer.model.ProjectRealm;
 import com.android.example.todoer.model.TaskRealm;
 import com.android.example.todoer.utility.DateUtility;

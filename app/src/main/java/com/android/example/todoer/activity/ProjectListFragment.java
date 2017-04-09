@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.android.example.todoer.R;
 import com.android.example.todoer.adapter.ProjectListAdapter;
-import com.android.example.todoer.model.OnRecyclerViewItemClickListener;
+import com.android.example.todoer.utility.OnRecyclerViewItemClickListener;
 import com.android.example.todoer.model.ProjectRealm;
 
 import io.realm.Realm;

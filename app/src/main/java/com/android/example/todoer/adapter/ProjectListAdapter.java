@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.android.example.todoer.R;
 import com.android.example.todoer.activity.ProjectEditorActivity;
-import com.android.example.todoer.model.OnRecyclerViewItemClickListener;
 import com.android.example.todoer.model.ProjectRealm;
+import com.android.example.todoer.utility.OnRecyclerViewItemClickListener;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -42,6 +42,15 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final ProjectRealm poject = projects.get(position);
+
+        // if project is Inbox - don't show it int this list
+        if (poject.getId() == ProjectRealm.INBOX_ID) {
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)holder.cardView.getLayoutParams();
+            holder.cardView.setVisibility(View.GONE);
+            params.height = 0;
+            params.width = 0;
+        }
+
         String name = poject.getName();
         holder.projectTitleTextView.setText(name);
         setupProjectColor(poject.getColor(), holder.projectColorImageView);

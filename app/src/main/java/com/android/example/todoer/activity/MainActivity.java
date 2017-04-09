@@ -17,6 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.android.example.todoer.R;
+import com.android.example.todoer.model.ProjectRealm;
+
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -29,6 +32,18 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Add inbox project to DB
+        Realm realm = Realm.getDefaultInstance();
+        ProjectRealm inbox = realm.where(ProjectRealm.class).equalTo(ProjectRealm.ID, ProjectRealm.INBOX_ID).findFirst();
+        if (inbox == null) {
+            realm.beginTransaction();
+            ProjectRealm inboxProject = new ProjectRealm();
+            inboxProject.setId(ProjectRealm.INBOX_ID);
+            inboxProject.setName(getString(R.string.drawer_inbox));
+            realm.copyToRealm(inboxProject);
+            realm.commitTransaction();
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

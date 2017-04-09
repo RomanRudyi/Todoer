@@ -17,14 +17,27 @@ import com.android.example.todoer.model.ProjectRealm;
 public class ColorPickerFragment extends DialogFragment {
 
     public interface ColorPickerDialogListener {
-        void onColorPickerDialogPositiveClick(DialogFragment dialog);
+        void onColorSet(DialogFragment dialog, int projectColor);
     }
+
+    public static final String PROJECT_COLOR = "project_color";
 
     private RadioGroup colorRadioGroup;
     private ProjectEditorActivity projectEditorActivity;
+    private int projectColor;
+
+    public static ColorPickerFragment newInstance(int projectColor) {
+        ColorPickerFragment fragment = new ColorPickerFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(PROJECT_COLOR, projectColor);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        projectColor = getArguments().getInt(PROJECT_COLOR);
+
         // Create a new instance of ColorPickerDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -35,7 +48,7 @@ public class ColorPickerFragment extends DialogFragment {
 
         colorRadioGroup = (RadioGroup)
                 dialogView.findViewById(R.id.color_radio_group);
-
+        colorRadioGroup.check(getCheckedId());
 
         builder.setTitle(R.string.select_priority)
                 // Inflate and set the layout for the dialog
@@ -44,7 +57,7 @@ public class ColorPickerFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         colorChanged(colorRadioGroup.getCheckedRadioButtonId());
-                        projectEditorActivity.onColorPickerDialogPositiveClick(ColorPickerFragment.this);
+                        projectEditorActivity.onColorSet(ColorPickerFragment.this, projectColor);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -74,20 +87,42 @@ public class ColorPickerFragment extends DialogFragment {
     private void colorChanged(int checkedId) {
         switch (checkedId) {
             case R.id.rb_color_red:
-                projectEditorActivity.setProjectColor(ProjectRealm.COLOR_RED);
+                projectColor = ProjectRealm.COLOR_RED;
                 break;
             case R.id.rb_color_green:
-                projectEditorActivity.setProjectColor(ProjectRealm.COLOR_GREEN);
+                projectColor = ProjectRealm.COLOR_GREEN;
                 break;
             case R.id.rb_color_blue:
-                projectEditorActivity.setProjectColor(ProjectRealm.COLOR_BLUE);
+                projectColor = ProjectRealm.COLOR_BLUE;
                 break;
             case R.id.rb_color_purple:
-                projectEditorActivity.setProjectColor(ProjectRealm.COLOR_PURPLE);
+                projectColor = ProjectRealm.COLOR_PURPLE;
                 break;
             case R.id.rb_color_orange:
-                projectEditorActivity.setProjectColor(ProjectRealm.COLOR_ORANGE);
+                projectColor = ProjectRealm.COLOR_ORANGE;
                 break;
         }
+    }
+
+    private int getCheckedId() {
+        int checkedId = R.id.rb_color_red;
+        switch (projectColor) {
+            case ProjectRealm.COLOR_RED:
+                checkedId = R.id.rb_color_red;
+                break;
+            case ProjectRealm.COLOR_GREEN:
+                checkedId = R.id.rb_color_green;
+                break;
+            case ProjectRealm.COLOR_BLUE:
+                checkedId = R.id.rb_color_blue;
+                break;
+            case ProjectRealm.COLOR_ORANGE:
+                checkedId = R.id.rb_color_orange;
+                break;
+            case ProjectRealm.COLOR_PURPLE:
+                checkedId = R.id.rb_color_purple;
+                break;
+        }
+        return checkedId;
     }
 }

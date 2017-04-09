@@ -2,27 +2,24 @@ package com.android.example.todoer.activity;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.example.todoer.R;
+import com.android.example.todoer.dialog.PriorityPickerFragment;
 import com.android.example.todoer.dialog.ProjectPickerFragment;
 import com.android.example.todoer.model.ProjectRealm;
 import com.android.example.todoer.model.TaskRealm;
@@ -33,31 +30,31 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 
-public class TaskEditorActivity extends AppCompatActivity implements ProjectPickerFragment.ProjectPickerDialogListener{
+public class TaskEditorActivity extends AppCompatActivity implements ProjectPickerFragment.ProjectPickerListener,
+        PriorityPickerFragment.PriorityPickerListener {
 
-    public static String EXTRA_TASK_ID = "taskId";
+    public static final String EXTRA_TASK_ID = "taskId";
+
+    public static final String DATE_PICKER_TAG = "datePicker";
+    public static final String PRIORITY_PICKER_TAG = "priorityPicker";
+    public static final String PROJECT_PICKER_TAG = "projectPicker";
+
+    public static final DateFormat dateFormat =
+            new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
+    public static Calendar calendar = Calendar.getInstance();
 
     private EditText titleEditText;
 
-    public static final String DATE_PICKER_TAG = "datePicker";
-    public static final DateFormat dateFormat =
-            new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
     private TextView dateTextView;
-    public static Calendar calendar = Calendar.getInstance();
-
-    public static final String PRIORITY_PICKER_TAG = "priorityPicker";
     private TextView priorityTextView;
-    private static int priority;
-
-    public static final String PROJECT_PICKER_TAG = "projectPicker";
     private TextView projectTextView;
-    private static long projectId;
 
     private Realm realm;
     private TaskRealm task;
     private boolean isExistedTask = false;
+    private int priority;
+    private long projectId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,10 +95,7 @@ public class TaskEditorActivity extends AppCompatActivity implements ProjectPick
         priorityContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Bundle bundle = new Bundle();
-                //bundle.putLong(ProjectPickerFragment.PROJECT_ID, projectId);
-                DialogFragment priorityPickerFragment = new PriorityPickerFragment();
-                //priorityPickerFragment.setArguments(bundle);
+                DialogFragment priorityPickerFragment = PriorityPickerFragment.newInstance(priority);
                 priorityPickerFragment.show(getSupportFragmentManager(), PRIORITY_PICKER_TAG);
 
             }
@@ -111,7 +105,7 @@ public class TaskEditorActivity extends AppCompatActivity implements ProjectPick
         projectContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment projectPickerFragment = new ProjectPickerFragment();
+                DialogFragment projectPickerFragment = ProjectPickerFragment.newInstance(projectId);
                 projectPickerFragment.show(getSupportFragmentManager(), PROJECT_PICKER_TAG);
 
             }
@@ -120,43 +114,48 @@ public class TaskEditorActivity extends AppCompatActivity implements ProjectPick
 
     private void setupTask() {
         if (getIntent().hasExtra(EXTRA_TASK_ID)) {
+            // get task id from Intent
             long taskId = getIntent().getExtras().getLong(EXTRA_TASK_ID);
+            // get Task from Realm
             task = realm.where(TaskRealm.class).equalTo(TaskRealm.ID, taskId).findFirst();
-
+            // setup Task title
             titleEditText.setText(task.getTitle());
-
+            // setup Task date
             calendar.setTimeInMillis(task.getDate());
             dateTextView.setText(dateFormat.format(task.getDate()));
-
+            // setup Task priority
             priority = task.getPriority();
-            setupPriority();
-
+            setupPriorityContainer();
+            // setup Task Project
             projectId = task.getProjectId();
-            setupProjectContainer(projectId, projectTextView, getString(R.string.drawer_inbox));
-
+            setupProjectContainer();
+            // set that the Task is existed
             isExistedTask = true;
         } else {
+            // set the default values to containers
             calendar = Calendar.getInstance();
             dateTextView.setText(dateFormat.format(calendar.getTimeInMillis()));
             priorityTextView.setText(getString(R.string.priority_none));
             priorityTextView.setTextColor(getResources().getColor(R.color.colorPriorityNone));
             priority = TaskRealm.PRIORITY_NONE;
             projectId = ProjectRealm.INBOX_ID;
-            projectTextView.setText(getString(R.string.drawer_inbox));
+            setupProjectContainer();
         }
     }
 
-    private static void setupProjectContainer(long projectId, TextView projectTextView, String inboxName) {
-        if (projectId == ProjectRealm.INBOX_ID) {
-            projectTextView.setText(inboxName);
-        } else {
-            String projectName = Realm.getDefaultInstance().where(ProjectRealm.class)
-                    .equalTo(ProjectRealm.ID, projectId).findFirst().getName();
-            projectTextView.setText(projectName);
-        }
+    /**
+     * This helper method sets up the Project container
+     */
+    private void setupProjectContainer() {
+        String projectName = Realm.getDefaultInstance().where(ProjectRealm.class)
+                .equalTo(ProjectRealm.ID, projectId).findFirst().getName();
+        projectTextView.setText(projectName);
     }
 
-    private void setupPriority() {
+    /**
+     * This helper method sets up the Priority container
+     */
+    private void setupPriorityContainer() {
         int priorityColor;
         String priorityText;
 
@@ -255,8 +254,15 @@ public class TaskEditorActivity extends AppCompatActivity implements ProjectPick
     }
 
     @Override
-    public void onProjectPickerDialogPositiveClick(DialogFragment dialog, long projectId) {
-        setupProjectContainer(projectId, projectTextView, getString(R.string.drawer_inbox));
+    public void onProjectSet(DialogFragment dialog, long projectId) {
+        this.projectId = projectId;
+        setupProjectContainer();
+    }
+
+    @Override
+    public void onPrioritySet(DialogFragment dialog, int priority) {
+        this.priority = priority;
+        setupPriorityContainer();
     }
 
     public static class DatePickerFragment extends DialogFragment
@@ -284,134 +290,4 @@ public class TaskEditorActivity extends AppCompatActivity implements ProjectPick
         }
     }
 
-    //TODO: use interface
-    public static class PriorityPickerFragment extends DialogFragment {
-
-        private TextView priorityTextView;
-        private RadioGroup priorityRadioGroup;
-
-        @Override
-        public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
-            priorityTextView = (TextView) getActivity().findViewById(R.id.editor_priority);
-
-            // Create a new instance of PriorityPickerDialog
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-            // Get the layout inflater
-            final LayoutInflater inflater = getActivity().getLayoutInflater();
-
-            View dialogView = inflater.inflate(R.layout.priority_dialog, null);
-
-            priorityRadioGroup = (RadioGroup)
-                    dialogView.findViewById(R.id.priority_radio_group);
-
-
-            builder.setTitle(R.string.select_priority)
-                    // Inflate and set the layout for the dialog
-                    .setView(dialogView)
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            priorityChanged(priorityRadioGroup.getCheckedRadioButtonId());
-                        }
-                    })
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            PriorityPickerFragment.this.getDialog().cancel();
-                        }
-                    });
-
-            return builder.create();
-        }
-
-        private void priorityChanged(int checkedId) {
-            int priorityColor = 0;
-            String priorityText = "";
-
-            switch (checkedId) {
-                case R.id.rb_priority_none:
-                    priority = TaskRealm.PRIORITY_NONE;
-                    priorityColor = getActivity().getResources()
-                            .getColor(R.color.colorPriorityNone);
-                    priorityText = getString(R.string.priority_none);
-                    break;
-                case R.id.rb_priority_low:
-                    priority = TaskRealm.PRIORITY_LOW;
-                    priorityColor = getActivity().getResources()
-                            .getColor(R.color.colorPriorityLow);
-                    priorityText = getString(R.string.priority_low);
-                    break;
-                case R.id.rb_priority_medium:
-                    priority = TaskRealm.PRIORITY_MEDIUM;
-                    priorityColor = getActivity().getResources()
-                            .getColor(R.color.colorPriorityMedium);
-                    priorityText = getString(R.string.priority_medium);
-                    break;
-                case R.id.rb_priority_high:
-                    priority = TaskRealm.PRIORITY_HIGH;
-                    priorityColor = getActivity().getResources()
-                            .getColor(R.color.colorPriorityHigh);
-                    priorityText = getString(R.string.priority_high);
-                    break;
-            }
-
-            priorityTextView.setText(priorityText);
-            priorityTextView.setTextColor(priorityColor);
-        }
-    }
-
-    public static class ProjectPickerFragment extends DialogFragment {
-
-        private TextView projectTextView;
-        private Realm realm;
-        private RealmResults<ProjectRealm> projects;
-        private int checkedItemPosition = 0;
-
-        @Override
-        public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
-            projectTextView = (TextView) getActivity().findViewById(R.id.editor_project);
-
-            realm = Realm.getDefaultInstance();
-
-            projects = realm.where(ProjectRealm.class).findAllSorted(ProjectRealm.NAME);
-
-            String[] projectNames = new String[projects.size() + 1];
-            projectNames[0] = getActivity().getString(R.string.drawer_inbox);
-            for (int i = 1; i < projectNames.length; i++) {
-                projectNames[i] = projects.get(i - 1).getName();
-            }
-
-            // Create a new instance of PriorityPickerDialog
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-            builder.setTitle(R.string.select_priority)
-                    // Inflate and set the layout for the dialog
-                    .setSingleChoiceItems(projectNames, 0, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            checkedItemPosition = which;
-                        }
-                    })
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (checkedItemPosition == ProjectRealm.INBOX_ID) {
-                                projectId = ProjectRealm.INBOX_ID;
-                            } else {
-                                projectId = projects.get(checkedItemPosition - 1).getId();
-                            }
-                            setupProjectContainer(projectId, projectTextView, getString(R.string.drawer_inbox));
-                        }
-                    })
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ProjectPickerFragment.this.getDialog().cancel();
-                        }
-                    });
-
-            return builder.create();
-        }
-    }
 }

@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 
 import com.android.example.todoer.R;
 import com.android.example.todoer.adapter.TaskListAdapter;
-import com.android.example.todoer.model.OnRecyclerViewItemClickListener;
+import com.android.example.todoer.utility.OnRecyclerViewItemClickListener;
 import com.android.example.todoer.model.TaskRealm;
 
 import io.realm.Realm;

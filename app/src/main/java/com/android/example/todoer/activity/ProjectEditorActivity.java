@@ -26,24 +26,23 @@ import io.realm.RealmResults;
 
 public class ProjectEditorActivity extends AppCompatActivity implements ColorPickerFragment.ColorPickerDialogListener {
 
-    public static String EXTRA_PROJECT_ID = "projectId";
-
-    private EditText projectNameEditText;
-    private String projectName;
+    public static final String EXTRA_PROJECT_ID = "projectId";
 
     public static final String COLOR_PICKER_TAG = "colorPicker";
+
+    private EditText projectNameEditText;
+
     private LinearLayout colorContainer;
+
     private ImageView colorImageView;
-    private int projectColor;
 
     private Realm realm;
     private ProjectRealm project;
+
+    private String projectName;
+    private int projectColor;
     private long projectId;
     private boolean isExistedProject;
-
-    public void setProjectColor(int projectColor) {
-        this.projectColor = projectColor;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +73,7 @@ public class ProjectEditorActivity extends AppCompatActivity implements ColorPic
         colorContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment colorPickerFragment = new ColorPickerFragment();
+                DialogFragment colorPickerFragment = ColorPickerFragment.newInstance(projectColor);
                 colorPickerFragment.show(getSupportFragmentManager(), COLOR_PICKER_TAG);
 
             }
@@ -201,7 +200,8 @@ public class ProjectEditorActivity extends AppCompatActivity implements ColorPic
     }
 
     @Override
-    public void onColorPickerDialogPositiveClick(DialogFragment dialog) {
+    public void onColorSet(DialogFragment dialog, int projectColor) {
+        this.projectColor = projectColor;
         // User touched the dialog's positive button
         Drawable drawable = getChangedDrawable(this, projectColor);
         if (drawable != null) {
