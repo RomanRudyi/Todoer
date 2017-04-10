@@ -42,10 +42,10 @@ public class ProjectListFragment extends Fragment {
         projectListAdapter.setListener(new OnRecyclerViewItemClickListener() {
             @Override
             public void onClick(int position) {
-                Fragment projectFragment = new ProjectFragment();
-                /** Pass the project id to {@link ProjectFragment} */
+                Fragment projectFragment = new TaskListFragment();
+                /** Pass the project id to {@link TaskListFragment} */
                 Bundle bundle = new Bundle();
-                bundle.putLong(ProjectFragment.PROJECT_ID, projects.get(position).getId());
+                bundle.putLong(TaskListFragment.PROJECT_ID, projects.get(position).getId());
                 projectFragment.setArguments(bundle);
 
                 FragmentTransaction transaction =

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,8 @@ import android.widget.RelativeLayout;
 
 import com.android.example.todoer.R;
 import com.android.example.todoer.adapter.TaskListAdapter;
-import com.android.example.todoer.utility.OnRecyclerViewItemClickListener;
 import com.android.example.todoer.model.TaskRealm;
+import com.android.example.todoer.utility.OnRecyclerViewItemClickListener;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -23,7 +24,7 @@ import io.realm.Sort;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProjectFragment extends Fragment {
+public class TaskListFragment extends Fragment {
 
     public static final String PROJECT_ID = "project_id";
 
@@ -32,6 +33,8 @@ public class ProjectFragment extends Fragment {
     private RelativeLayout emptyView;
 
     private RealmResults<TaskRealm> tasks;
+
+    private long projectId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,13 +47,19 @@ public class ProjectFragment extends Fragment {
 
         Realm realm = Realm.getDefaultInstance();
 
-        long projectId = getArguments().getLong(PROJECT_ID);
+        if (getArguments() != null && getArguments().containsKey(PROJECT_ID)) {
+            projectId = getArguments().getLong(PROJECT_ID);
+            tasks = realm.where(TaskRealm.class)
+                    .equalTo(TaskRealm.PROJECT_ID, projectId)
+                    .findAllSorted(
+                            new String[] {TaskRealm.IS_ACTIVE, TaskRealm.PRIORITY, TaskRealm.DATE, TaskRealm.TITLE},
+                            new Sort[] {Sort.DESCENDING, Sort.DESCENDING, Sort.ASCENDING, Sort.ASCENDING});
+        } else {
+            tasks = realm.where(TaskRealm.class).findAllSorted(
+                    new String[] {TaskRealm.IS_ACTIVE, TaskRealm.PRIORITY, TaskRealm.DATE, TaskRealm.TITLE},
+                    new Sort[] {Sort.DESCENDING, Sort.DESCENDING, Sort.ASCENDING, Sort.ASCENDING});
+        }
 
-        tasks = realm.where(TaskRealm.class)
-                .equalTo(TaskRealm.PROJECT_ID, projectId)
-                .findAllSorted(
-                        new String[] {TaskRealm.IS_ACTIVE, TaskRealm.PRIORITY, TaskRealm.DATE, TaskRealm.TITLE},
-                        new Sort[] {Sort.DESCENDING, Sort.DESCENDING, Sort.ASCENDING, Sort.ASCENDING});
 
         refreshTaskRecyclerView();
 
@@ -58,6 +67,8 @@ public class ProjectFragment extends Fragment {
         taskRecyclerView.setAdapter(taskListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         taskRecyclerView.setLayoutManager(layoutManager);
+
+        setupItemTouchHelper();
 
         taskListAdapter.setListener(new OnRecyclerViewItemClickListener() {
             @Override
@@ -82,5 +93,28 @@ public class ProjectFragment extends Fragment {
             emptyView.setVisibility(View.GONE);
             taskRecyclerView.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void setupItemTouchHelper() {
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView,
+                                          RecyclerView.ViewHolder viewHolder,
+                                          RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                        int swipedPosition = viewHolder.getAdapterPosition();
+                        TaskListAdapter adapter = (TaskListAdapter) taskRecyclerView.getAdapter();
+                        adapter.setAsCompleted(swipedPosition);
+                    }
+
+                };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(taskRecyclerView);
     }
 }

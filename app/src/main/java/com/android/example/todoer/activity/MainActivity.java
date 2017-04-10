@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setCheckedItem(R.id.nav_inbox);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content_frame, new InboxFragment(), VISIBLE_FRAGMENT);
+        transaction.replace(R.id.content_frame, new TaskListFragment(), VISIBLE_FRAGMENT);
         transaction.addToBackStack(null);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.commit();
@@ -111,12 +111,12 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        Fragment fragment = new InboxFragment();
+        Fragment fragment = new TaskListFragment();
 
         if (id == R.id.nav_inbox) {
-            fragment = new InboxFragment();
+            fragment = new TaskListFragment();
         } else if (id == R.id.nav_calendar) {
-            fragment = new InboxFragment();
+            fragment = new TaskListFragment();
         } else if (id == R.id.nav_projects) {
             fragment = new ProjectListFragment();
         } else if (id ==  R.id.nav_add_list) {
