@@ -1,0 +1,87 @@
+{
+  "project_info": {
+    "project_number": "336735646745",
+    "project_id": "dailyplanner-149620"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:336735646745:android:77d670237f91342d",
+        "android_client_info": {
+          "package_name": "com.example.bohdan.dailyplanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "336735646745-mi6f21kvnedc9ilq2e4a6rmkmqam74sk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bohdan.dailyplanner",
+            "certificate_hash": "744ecf12164c45815beaafe4cce689a670aad70f"
+          }
+        },
+        {
+          "client_id": "336735646745-e863b8q3gji5liscg7bqdpnindhn0moi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOy-T-HdtUqyxNlqoX5ASaAcnnWgjWq7A"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:336735646745:android:eda27c46be93a98e",
+        "android_client_info": {
+          "package_name": "com.android.example.todoer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "336735646745-inbsnqtunrhk710e73l74p4ij36iebs5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.example.todoer",
+            "certificate_hash": "744ecf12164c45815beaafe4cce689a670aad70f"
+          }
+        },
+        {
+          "client_id": "336735646745-e863b8q3gji5liscg7bqdpnindhn0moi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOy-T-HdtUqyxNlqoX5ASaAcnnWgjWq7A"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

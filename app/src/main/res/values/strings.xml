@@ -43,4 +43,9 @@
 
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
+    <string name="permission_rationale">permission</string>
+    <string name="error_invalid_password">Invalid password</string>
+    <string name="error_field_required">Email cannot be empty</string>
+    <string name="error_invalid_email">Password cannot be empty</string>
+    <string name="error_incorrect_password">Incorrect password</string>
 </resources>
