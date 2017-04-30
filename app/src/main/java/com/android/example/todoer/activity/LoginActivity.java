@@ -30,6 +30,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.example.todoer.R;
+import com.android.example.todoer.data.PrefsManager;
+import com.android.example.todoer.data.retrofit.authorization.AuthRequestsManager;
+import com.android.example.todoer.data.retrofit.authorization.login.AuthRequestModel;
+import com.android.example.todoer.data.retrofit.authorization.login.AuthResponseModel;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -41,6 +45,10 @@ import com.google.android.gms.common.api.Scope;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -145,11 +153,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             String serverAuthCode = acct.getServerAuthCode();
             tvIdToken.setText(token);
             tvServerAuthCode.setText(serverAuthCode);
-            //testLogin(serverAuthCode);
+            testLogin(serverAuthCode);
         }
     }
 
-   /* private void testLogin(String serverAuthCode) {
+    private void testLogin(String serverAuthCode) {
         AuthRequestsManager requestsManager = new AuthRequestsManager(PrefsManager.getInstance(this));
         requestsManager.authUser(new AuthRequestModel(serverAuthCode))
                 .subscribeOn(Schedulers.newThread())
@@ -172,7 +180,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     }
 
                 });
-    }*/
+    }
 
     private void setupGoogleSignIn() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

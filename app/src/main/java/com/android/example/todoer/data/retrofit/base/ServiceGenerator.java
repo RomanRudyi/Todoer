@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
 
-    public static final String BASE_URL = "https://microsoft-apiapp07b098e897ec4118ba82fbd565fb0e19.azurewebsites.net/";
+    public static final String BASE_URL = "https://67bb31c3.ngrok.io/";
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 

@@ -3,10 +3,10 @@ package com.android.example.todoer.data.retrofit.authorization;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.bohdan.dailyplanner.data.PrefsManager;
-import com.example.bohdan.dailyplanner.data.retrofit.authorization.refresh.RefreshTokenService;
-import com.example.bohdan.dailyplanner.data.retrofit.authorization.refresh.TokenResponseModel;
-import com.example.bohdan.dailyplanner.data.retrofit.base.ServiceGenerator;
+import com.android.example.todoer.data.PrefsManager;
+import com.android.example.todoer.data.retrofit.authorization.refresh.RefreshTokenService;
+import com.android.example.todoer.data.retrofit.authorization.refresh.TokenResponseModel;
+import com.android.example.todoer.data.retrofit.base.ServiceGenerator;
 
 import java.io.IOException;
 

@@ -2,11 +2,11 @@ package com.android.example.todoer.data.retrofit.authorization;
 
 import android.support.annotation.NonNull;
 
-import com.example.bohdan.dailyplanner.data.PrefsManager;
-import com.example.bohdan.dailyplanner.data.retrofit.base.ServiceGenerator;
-import com.example.bohdan.dailyplanner.data.retrofit.authorization.login.AuthRequestModel;
-import com.example.bohdan.dailyplanner.data.retrofit.authorization.login.AuthResponseModel;
-import com.example.bohdan.dailyplanner.data.retrofit.authorization.login.AuthService;
+import com.android.example.todoer.data.PrefsManager;
+import com.android.example.todoer.data.retrofit.authorization.login.AuthRequestModel;
+import com.android.example.todoer.data.retrofit.authorization.login.AuthResponseModel;
+import com.android.example.todoer.data.retrofit.authorization.login.AuthService;
+import com.android.example.todoer.data.retrofit.base.ServiceGenerator;
 
 import rx.Observable;
 
