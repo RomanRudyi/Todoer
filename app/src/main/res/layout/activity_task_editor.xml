@@ -32,11 +32,22 @@ tools:context="com.android.example.todoer.activity.TaskEditorActivity">
             android:id="@+id/title_text_input_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar"
             android:layout_marginTop="72dp"
             android:layout_marginLeft="64dp"
             android:layout_marginRight="72dp"
             android:focusableInTouchMode="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/completed_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_done"
+                android:visibility="visible"/>
 
             <EditText
                 android:id="@+id/title_edit_text"
@@ -45,6 +56,8 @@ tools:context="com.android.example.todoer.activity.TaskEditorActivity">
                 android:maxLines="1"
                 android:inputType="textCapSentences"
                 android:hint="@string/editor_title" />
+
+            </LinearLayout>
         </android.support.design.widget.TextInputLayout>
 
     </android.support.design.widget.CollapsingToolbarLayout>

@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,11 +51,15 @@ public class TaskEditorActivity extends AppCompatActivity implements ProjectPick
     private TextView priorityTextView;
     private TextView projectTextView;
 
+    private ImageView completedImageView;
+
     private Realm realm;
     private TaskRealm task;
     private boolean isExistedTask = false;
+    private long taskId;
     private int priority;
     private long projectId;
+    private boolean isActive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +75,7 @@ public class TaskEditorActivity extends AppCompatActivity implements ProjectPick
         dateTextView = (TextView) findViewById(R.id.editor_date);
         priorityTextView = (TextView) findViewById(R.id.editor_priority);
         projectTextView = (TextView) findViewById(R.id.editor_project);
+        completedImageView = (ImageView) findViewById(R.id.completed_image_view);
 
         // Set the task's parameters
         setupTask();
@@ -115,7 +121,7 @@ public class TaskEditorActivity extends AppCompatActivity implements ProjectPick
     private void setupTask() {
         if (getIntent().hasExtra(EXTRA_TASK_ID)) {
             // get task id from Intent
-            long taskId = getIntent().getExtras().getLong(EXTRA_TASK_ID);
+            taskId = getIntent().getExtras().getLong(EXTRA_TASK_ID);
             // get Task from Realm
             task = realm.where(TaskRealm.class).equalTo(TaskRealm.ID, taskId).findFirst();
             // setup Task title
@@ -129,6 +135,13 @@ public class TaskEditorActivity extends AppCompatActivity implements ProjectPick
             // setup Task Project
             projectId = task.getProjectId();
             setupProjectContainer();
+            // setup Task Active State
+            isActive = task.isActive();
+            if (isActive) {
+                completedImageView.setVisibility(View.GONE);
+            } else {
+                completedImageView.setVisibility(View.VISIBLE);
+            }
             // set that the Task is existed
             isExistedTask = true;
         } else {
@@ -228,8 +241,14 @@ public class TaskEditorActivity extends AppCompatActivity implements ProjectPick
         super.onPrepareOptionsMenu(menu);
         // If this is a new task, hide the "Delete" menu item.
         if (!isExistedTask) {
-            MenuItem menuItem = menu.findItem(R.id.action_delete);
-            menuItem.setVisible(false);
+            MenuItem delete = menu.findItem(R.id.action_delete);
+            delete.setVisible(false);
+            MenuItem timer = menu.findItem(R.id.action_timer);
+            timer.setVisible(false);
+        }
+        if (!isActive) {
+            MenuItem timer = menu.findItem(R.id.action_timer);
+            timer.setVisible(false);
         }
         return true;
     }
@@ -249,6 +268,11 @@ public class TaskEditorActivity extends AppCompatActivity implements ProjectPick
                 startActivity(intent);
                 return true;
             }
+        } else if (id == R.id.action_timer) {
+            Intent intent = new Intent(TaskEditorActivity.this, PomodoroActivity.class);
+            intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.putExtra(EXTRA_TASK_ID, taskId);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

@@ -27,6 +27,8 @@
             android:name=".activity.ProjectEditorActivity"
             android:parentActivityName=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.PomodoroActivity"
+            android:parentActivityName=".activity.MainActivity"/>
     </application>
 
 </manifest>

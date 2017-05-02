@@ -171,9 +171,11 @@ public class ProjectEditorActivity extends AppCompatActivity implements ColorPic
         super.onPrepareOptionsMenu(menu);
         // If this is a new task, hide the "Delete" menu item.
         if (!isExistedProject) {
-            MenuItem menuItem = menu.findItem(R.id.action_delete);
-            menuItem.setVisible(false);
+            MenuItem delete = menu.findItem(R.id.action_delete);
+            delete.setVisible(false);
         }
+        MenuItem timer = menu.findItem(R.id.action_timer);
+        timer.setVisible(false);
         return true;
     }
 
